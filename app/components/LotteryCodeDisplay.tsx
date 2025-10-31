@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import type { ComplexCode, EthereumCode, HongKongCode, ThaiGovCode, SuffixCode, Max3DCode, BaacCode, ZcvipCode } from '@/lib/types'
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
+  const [isVietnameseExpanded, setIsVietnameseExpanded] = useState(false)
   // 简单字符串格式
   if (typeof code === 'string') {
     return (
@@ -358,7 +360,7 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   if (complexCode.code || complexCode.code1) {
     return (
       <div className="space-y-2 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-lg">
-        {/* 特别奖 */}
+        {/* 特别奖 - 默认显示 */}
         {complexCode.code && typeof complexCode.code === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
             <div className="text-xs font-bold text-red-600 dark:text-red-400 mb-2 text-center">
@@ -377,8 +379,20 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           </div>
         )}
 
-        {/* 一等奖 */}
-        {complexCode.code1 && typeof complexCode.code1 === 'string' && (
+        {/* 查看详情按钮 */}
+        <button
+          onClick={() => setIsVietnameseExpanded(!isVietnameseExpanded)}
+          className="w-full py-2 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-sm font-semibold rounded-lg shadow-md transition-all duration-200 flex items-center justify-center gap-2"
+        >
+          <span>{isVietnameseExpanded ? '收起详情' : '查看详情'}</span>
+          <span className="text-lg">{isVietnameseExpanded ? '▲' : '▼'}</span>
+        </button>
+
+        {/* 其他奖项 - 展开时显示 */}
+        {isVietnameseExpanded && (
+          <div className="space-y-2 animate-fadeIn">
+            {/* 一等奖 */}
+            {complexCode.code1 && typeof complexCode.code1 === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
             <div className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-2 text-center">
               🥇 一等奖
@@ -553,6 +567,8 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
             </div>
           )}
         </div>
+          </div>
+        )}
       </div>
     )
   }
