@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { LotteryType, LotteryResult } from '@/lib/types'
 import LotteryCodeDisplay from './components/LotteryCodeDisplay'
+import VietnameseDetailsModal from './components/VietnameseDetailsModal'
 
 export default function Home() {
   const [lotteryTypes, setLotteryTypes] = useState<LotteryType[]>([])
@@ -26,6 +27,10 @@ export default function Home() {
   const [latestIssue, setLatestIssue] = useState<string>('') // 记录最新期号
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null) // 上次检查时间
   const [isChecking, setIsChecking] = useState(false) // 是否正在检查
+  
+  // 越南传统彩票详情模态框
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalData, setModalData] = useState<{code: any, issue: string} | null>(null)
 
   // 加载彩种列表
   useEffect(() => {
@@ -333,25 +338,51 @@ export default function Home() {
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                             开奖时间
                           </th>
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            操作
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {results.map((result) => (
-                          <tr key={result.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                              {result.issue}
-                            </td>
-                            <td className="px-6 py-4">
-                              <LotteryCodeDisplay 
-                                code={result.code} 
-                                lotteryCode={result.lottery_code}
-                              />
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                              {new Date(result.open_date).toLocaleString('zh-CN')}
-                            </td>
-                          </tr>
-                        ))}
+                        {results.map((result) => {
+                          // 判断是否为越南传统彩票（检查 code 是否有 code1 属性）
+                          const isVietnameseLottery = typeof result.code === 'object' && 
+                            result.code !== null && 
+                            'code1' in result.code
+                          
+                          return (
+                            <tr key={result.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                {result.issue}
+                              </td>
+                              <td className="px-6 py-4">
+                                <LotteryCodeDisplay 
+                                  code={result.code} 
+                                  lotteryCode={result.lottery_code}
+                                />
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                {new Date(result.open_date).toLocaleString('zh-CN')}
+                              </td>
+                              <td className="px-6 py-4 text-center">
+                                {isVietnameseLottery && (
+                                  <button
+                                    onClick={() => {
+                                      setModalData({code: result.code, issue: result.issue})
+                                      setModalOpen(true)
+                                    }}
+                                    className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-lg shadow-sm transition-colors duration-200 inline-flex items-center gap-1"
+                                  >
+                                    <span>查看详情</span>
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          )
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -391,6 +422,16 @@ export default function Home() {
           <p>© 2025 彩票开奖数据采集平台 - 免费提供 API 接口</p>
         </footer>
       </div>
+
+      {/* 越南传统彩票详情模态框 */}
+      {modalData && (
+        <VietnameseDetailsModal 
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          code={modalData.code}
+          issue={modalData.issue}
+        />
+      )}
     </div>
   )
 }

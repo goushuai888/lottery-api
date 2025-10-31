@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import type { ComplexCode, EthereumCode, HongKongCode, ThaiGovCode, SuffixCode, Max3DCode, BaacCode, ZcvipCode } from '@/lib/types'
 
 interface Props {
@@ -9,7 +8,6 @@ interface Props {
 }
 
 export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
-  const [isVietnameseExpanded, setIsVietnameseExpanded] = useState(false)
   // 简单字符串格式
   if (typeof code === 'string') {
     return (
@@ -356,219 +354,24 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
     )
   }
 
-  // 越南传统彩格式 (完整版: 有code8；简化版: 有code7但没有code8)
+  // 越南传统彩格式 - 只显示特别奖号码（详情由模态框展示）
   if (complexCode.code || complexCode.code1) {
     return (
-      <div className="space-y-3">
-        {/* 特别奖 - 和其他彩种保持一致的显示 */}
-        <div className="flex items-center gap-3 flex-wrap">
-          {complexCode.code && typeof complexCode.code === 'string' && (
-            <div className="flex gap-2 flex-wrap">
-              {complexCode.code.split(',').filter(n => n).map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 text-white font-bold text-sm shadow-md"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          )}
-          
-          {/* 查看详情按钮 - 在号码右侧 */}
-          <button
-            onClick={() => setIsVietnameseExpanded(!isVietnameseExpanded)}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-1.5 whitespace-nowrap"
-          >
-            <span>{isVietnameseExpanded ? '收起详情' : '查看详情'}</span>
-            <span className="text-xs">{isVietnameseExpanded ? '▲' : '▼'}</span>
-          </button>
-        </div>
-
-        {/* 其他奖项 - 展开时显示 */}
-        {isVietnameseExpanded && (
-          <div className="space-y-2 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-lg animate-fadeIn">
-            {/* 一等奖 */}
-            {complexCode.code1 && typeof complexCode.code1 === 'string' && (
-          <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-            <div className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-2 text-center">
-              🥇 一等奖
-            </div>
-            <div className="flex gap-1.5 justify-center flex-wrap">
-              {complexCode.code1.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-white font-bold text-sm shadow-md"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 二等奖 */}
-        {complexCode.code2 && typeof complexCode.code2 === 'string' && (
-          <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-            <div className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-2 text-center">
-              🥈 二等奖
-            </div>
-            <div className="flex gap-1.5 justify-center flex-wrap">
-              {complexCode.code2.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white font-bold text-sm shadow-md"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 三等奖 - 2组5位数 */}
-        {complexCode.code3 && Array.isArray(complexCode.code3) && complexCode.code3.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-            <div className="text-xs font-bold text-green-600 dark:text-green-400 mb-2 text-center">
-              🥉 三等奖 (2组)
-            </div>
-            <div className="flex gap-4 justify-center flex-wrap">
-              {complexCode.code3.map((codeStr: any, groupIdx: number) => (
-                typeof codeStr === 'string' && (
-                  <div 
-                    key={groupIdx} 
-                    className="flex gap-1 p-1.5 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-md border border-green-200 dark:border-green-700"
-                  >
-                    {codeStr.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-gradient-to-br from-green-500 to-emerald-500 text-white font-bold text-xs shadow-sm"
-                      >
-                        {num}
-                      </span>
-                    ))}
-                  </div>
-                )
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 四等奖 */}
-        {complexCode.code4 && Array.isArray(complexCode.code4) && complexCode.code4.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-            <div className="text-xs font-bold text-purple-600 dark:text-purple-400 mb-2 text-center">
-              🎯 四等奖
-            </div>
-            <div className="grid grid-cols-2 gap-1.5">
-              {complexCode.code4.map((codeStr: any, groupIdx: number) => (
-                typeof codeStr === 'string' && (
-                  <div key={groupIdx} className="flex gap-0.5 justify-center">
-                    {codeStr.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-purple-400 to-pink-400 text-white font-bold text-xs shadow-sm"
-                      >
-                        {num}
-                      </span>
-                    ))}
-                  </div>
-                )
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 五等奖 */}
-        {complexCode.code5 && typeof complexCode.code5 === 'string' && (
-          <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-            <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-2 text-center">
-              🎲 五等奖
-            </div>
-            <div className="flex gap-1 justify-center">
-              {complexCode.code5.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-gradient-to-br from-indigo-400 to-purple-400 text-white font-bold text-xs shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 六等奖 - 3组4位数 */}
-        {complexCode.code6 && Array.isArray(complexCode.code6) && complexCode.code6.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-            <div className="text-xs font-bold text-cyan-600 dark:text-cyan-400 mb-2 text-center">
-              🎪 六等奖 (3组)
-            </div>
-            <div className="flex gap-4 justify-center flex-wrap">
-              {complexCode.code6.map((codeStr: any, groupIdx: number) => (
-                typeof codeStr === 'string' && (
-                  <div 
-                    key={groupIdx} 
-                    className="flex gap-0.5 p-1.5 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/30 dark:to-blue-900/30 rounded-md border border-cyan-200 dark:border-cyan-700"
-                  >
-                    {codeStr.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-cyan-400 to-blue-400 text-white font-bold text-xs shadow-sm"
-                      >
-                        {num}
-                      </span>
-                    ))}
-                  </div>
-                )
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 七等奖和八等奖 */}
-        <div className="grid grid-cols-2 gap-2">
-          {complexCode.code7 && typeof complexCode.code7 === 'string' && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-              <div className="text-xs font-bold text-teal-600 dark:text-teal-400 mb-2 text-center">
-                🎨 七等奖
-              </div>
-              <div className="flex gap-0.5 justify-center">
-                {complexCode.code7.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-teal-400 to-green-400 text-white font-bold text-xs shadow-sm"
-                  >
-                    {num}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {complexCode.code8 && typeof complexCode.code8 === 'string' && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-              <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-2 text-center">
-                🎁 八等奖
-              </div>
-              <div className="flex gap-0.5 justify-center">
-                {complexCode.code8.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-pink-400 to-rose-400 text-white font-bold text-xs shadow-sm"
-                  >
-                    {num}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-            </div>
-          </div>
-        )}
+      <div className="flex gap-2 flex-wrap">
+        {complexCode.code && typeof complexCode.code === 'string' && 
+          complexCode.code.split(',').filter((n: string) => n).map((num: string, idx: number) => (
+            <span
+              key={idx}
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 text-white font-bold text-sm shadow-md"
+            >
+              {num}
+            </span>
+          ))
+        }
       </div>
     )
   }
+
 
   // 默认显示原始数据
   return (
