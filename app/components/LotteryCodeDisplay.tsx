@@ -359,38 +359,35 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   // 越南传统彩格式 (完整版: 有code8；简化版: 有code7但没有code8)
   if (complexCode.code || complexCode.code1) {
     return (
-      <div className="space-y-2 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-lg">
-        {/* 特别奖 - 默认显示 */}
-        {complexCode.code && typeof complexCode.code === 'string' && (
-          <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
-            <div className="text-xs font-bold text-red-600 dark:text-red-400 mb-2 text-center">
-              ⭐ 特别奖
-            </div>
-            <div className="flex gap-1.5 justify-center flex-wrap">
+      <div className="space-y-3">
+        {/* 特别奖 - 和其他彩种保持一致的显示 */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {complexCode.code && typeof complexCode.code === 'string' && (
+            <div className="flex gap-2 flex-wrap">
               {complexCode.code.split(',').filter(n => n).map((num: string, idx: number) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-red-500 to-pink-600 text-white font-bold text-base shadow-md border-2 border-red-300"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 text-white font-bold text-sm shadow-md"
                 >
                   {num}
                 </span>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* 查看详情按钮 */}
-        <button
-          onClick={() => setIsVietnameseExpanded(!isVietnameseExpanded)}
-          className="w-full py-2 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-sm font-semibold rounded-lg shadow-md transition-all duration-200 flex items-center justify-center gap-2"
-        >
-          <span>{isVietnameseExpanded ? '收起详情' : '查看详情'}</span>
-          <span className="text-lg">{isVietnameseExpanded ? '▲' : '▼'}</span>
-        </button>
+          )}
+          
+          {/* 查看详情按钮 - 在号码右侧 */}
+          <button
+            onClick={() => setIsVietnameseExpanded(!isVietnameseExpanded)}
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-1.5 whitespace-nowrap"
+          >
+            <span>{isVietnameseExpanded ? '收起详情' : '查看详情'}</span>
+            <span className="text-xs">{isVietnameseExpanded ? '▲' : '▼'}</span>
+          </button>
+        </div>
 
         {/* 其他奖项 - 展开时显示 */}
         {isVietnameseExpanded && (
-          <div className="space-y-2 animate-fadeIn">
+          <div className="space-y-2 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-lg animate-fadeIn">
             {/* 一等奖 */}
             {complexCode.code1 && typeof complexCode.code1 === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
@@ -566,7 +563,7 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
               </div>
             </div>
           )}
-        </div>
+            </div>
           </div>
         )}
       </div>
