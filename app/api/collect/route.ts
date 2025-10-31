@@ -77,13 +77,13 @@ async function processLottery(lotteryCode: string, results: any[]) {
       }
 
       for (const batch of batches) {
-        const { error, count } = await supabaseAdmin
+        const { error, data } = await supabaseAdmin
           .from('lottery_results')
           .insert(batch)
-          .select('*', { count: 'exact' })
+          .select()
         
-        if (!error && count !== null) {
-          inserted += count
+        if (!error && data) {
+          inserted += data.length
         } else if (error) {
           // 可能是并发导致的唯一约束冲突，计入更新
           updated += batch.length
@@ -179,7 +179,8 @@ export async function POST(request: Request) {
       try {
         const { error: connectionError } = await supabaseAdmin
           .from('lottery_types')
-          .select('*', { count: 'exact', head: true })
+          .select('lottery_code')
+          .limit(1)
         
         if (!connectionError) {
           dbConnected = true
