@@ -24,6 +24,8 @@ export default function Home() {
   } | null>(null)
   const [autoRefresh, setAutoRefresh] = useState(true) // 自动刷新开关
   const [latestIssue, setLatestIssue] = useState<string>('') // 记录最新期号
+  const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null) // 上次检查时间
+  const [isChecking, setIsChecking] = useState(false) // 是否正在检查
 
   // 加载彩种列表
   useEffect(() => {
@@ -68,22 +70,27 @@ export default function Home() {
       .finally(() => setLoading(false))
   }, [selectedLottery, page])
 
-  // 自动刷新：定时检查最新数据
+  // 自动刷新：智能检测新期号
   useEffect(() => {
     if (!selectedLottery || !autoRefresh) return
 
     const checkForUpdates = async () => {
+      if (isChecking) return // 防止重复检查
+      
+      setIsChecking(true)
+      setLastCheckTime(new Date())
+      
       try {
-        // 获取最新一期数据
-        const res = await fetch(`/api/lottery-results/latest?lottery_code=${selectedLottery}`)
+        // 快速获取最新一期的期号（只取1条数据，性能更好）
+        const res = await fetch(`/api/lottery-results?lottery_code=${selectedLottery}&page=1&limit=1`)
         const data = await res.json()
         
         if (data.success && data.data && data.data.length > 0) {
           const newLatestIssue = data.data[0].issue
           
-          // 如果发现新期号，刷新数据
+          // 如果发现新期号，立即刷新数据
           if (latestIssue && newLatestIssue !== latestIssue) {
-            console.log(`🔄 检测到新开奖: ${selectedLottery} ${newLatestIssue}`)
+            console.log(`🎉 检测到新开奖: ${selectedLottery} 期号 ${newLatestIssue}（上期: ${latestIssue}）`)
             
             // 刷新当前页面的数据
             const refreshRes = await fetch(`/api/lottery-results?lottery_code=${selectedLottery}&page=${page}&limit=20`)
@@ -93,16 +100,27 @@ export default function Home() {
               setResults(refreshData.data)
               setTotalPages(refreshData.pagination.totalPages)
               setLatestIssue(newLatestIssue)
+              
+              // 可选：播放提示音或显示通知
+              console.log(`✅ 数据已更新，当前显示 ${refreshData.data.length} 条记录`)
             }
+          } else if (!latestIssue) {
+            // 首次加载，记录初始期号
+            setLatestIssue(newLatestIssue)
           }
         }
       } catch (error) {
         console.error('检查更新失败:', error)
+      } finally {
+        setIsChecking(false)
       }
     }
 
-    // 每 30 秒检查一次
-    const interval = setInterval(checkForUpdates, 30000)
+    // 立即执行一次检查
+    checkForUpdates()
+
+    // 每 10 秒检查一次（更适合高频彩种）
+    const interval = setInterval(checkForUpdates, 10000)
 
     return () => clearInterval(interval)
   }, [selectedLottery, page, latestIssue, autoRefresh])
@@ -233,17 +251,45 @@ export default function Home() {
                 选择彩种
               </label>
               {selectedLottery && (
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={autoRefresh}
-                    onChange={(e) => setAutoRefresh(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    🔄 自动刷新 (30秒)
-                  </span>
-                </label>
+                <div className="flex items-center gap-3">
+                  {/* 自动刷新状态 */}
+                  {autoRefresh && lastCheckTime && (
+                    <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                      {isChecking ? (
+                        <>
+                          <span className="inline-block w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
+                          检查中...
+                        </>
+                      ) : (
+                        <>
+                          <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                          {new Date().getTime() - lastCheckTime.getTime() < 1000 
+                            ? '刚刚检查' 
+                            : `${Math.floor((new Date().getTime() - lastCheckTime.getTime()) / 1000)}秒前`}
+                        </>
+                      )}
+                    </span>
+                  )}
+                  
+                  {/* 自动刷新开关 */}
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoRefresh}
+                      onChange={(e) => setAutoRefresh(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {autoRefresh ? (
+                        <span className="flex items-center gap-1">
+                          <span className="text-green-600">✓</span> 智能刷新 (10秒)
+                        </span>
+                      ) : (
+                        '🔄 自动刷新'
+                      )}
+                    </span>
+                  </label>
+                </div>
               )}
             </div>
             <select
