@@ -110,20 +110,33 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
-        {/* 头部 */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            🎰 彩票开奖数据采集平台
+        {/* Hero 区域 */}
+        <div className="text-center mb-16">
+          <div className="mb-6">
+            <span className="text-6xl mb-4 inline-block">🎰</span>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-800 dark:text-white mb-6">
+            彩票开奖数据 API 平台
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-            免费提供彩票开奖数据 API 接口 · 数据库已优化至 S 级
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+            专业的彩票开奖数据服务 · 179 个彩种 · 实时更新 · 完全免费
           </p>
-          <a
-            href="/api-docs"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
-          >
-            📖 查看 API 文档
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a
+              href="/api-docs"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+            >
+              <span className="text-xl">📖</span>
+              <span>查看 API 文档</span>
+            </a>
+            <a
+              href="#data-view"
+              className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl border-2 border-gray-200 dark:border-gray-700"
+            >
+              <span className="text-xl">📊</span>
+              <span>查看开奖数据</span>
+            </a>
+          </div>
         </div>
 
         {/* 统计面板 */}
@@ -164,59 +177,51 @@ export default function Home() {
           </div>
         )}
 
-        {/* API 文档 */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
-            📡 API 接口文档
-          </h2>
-          <div className="space-y-4">
-            <div className="border-l-4 border-blue-500 pl-4">
-              <h3 className="font-semibold text-gray-800 dark:text-white flex items-center gap-2">
-                获取彩种列表
-              </h3>
-              <code className="text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                GET /api/lottery-types
-              </code>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                参数: ?active=true (可选，只返回激活的彩种)
-              </p>
-            </div>
-            <div className="border-l-4 border-green-500 pl-4">
-              <h3 className="font-semibold text-gray-800 dark:text-white flex items-center gap-2">
-                获取开奖记录 <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">已优化</span>
-              </h3>
-              <code className="text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                GET /api/lottery-results
-              </code>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                参数: ?lottery_code=YN60&page=1&limit=50 · 性能提升 30%
-              </p>
-            </div>
-            <div className="border-l-4 border-purple-500 pl-4">
-              <h3 className="font-semibold text-gray-800 dark:text-white">获取最新开奖</h3>
-              <code className="text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                GET /api/lottery-results/latest
-              </code>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                参数: ?lottery_code=YN60 (可选，不传则返回所有彩种最新一期)
-              </p>
-            </div>
-            <div className="border-l-4 border-pink-500 pl-4">
-              <h3 className="font-semibold text-gray-800 dark:text-white flex items-center gap-2">
-                统计信息 <span className="text-xs bg-pink-100 text-pink-800 px-2 py-0.5 rounded">NEW</span>
-              </h3>
-              <code className="text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                GET /api/statistics
-              </code>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                获取平台统计数据 · 自动聚合各类彩票统计
-              </p>
-            </div>
+        {/* 核心特性 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="text-4xl mb-4">⚡</div>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+              实时更新
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              每分钟自动采集，数据实时同步，确保最新开奖信息
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="text-4xl mb-4">🔓</div>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+              完全免费
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              无需注册，无需 API Key，无访问限制，完全开放使用
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="text-4xl mb-4">🎯</div>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+              数据完整
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              179 个彩种全覆盖，智能补齐历史数据，零丢失
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="text-4xl mb-4">🚀</div>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+              高性能
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              数据库 S 级优化，并发处理，响应速度快至毫秒级
+            </p>
           </div>
         </div>
 
         {/* 数据查看 */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div id="data-view" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
             📊 开奖数据查看
           </h2>
