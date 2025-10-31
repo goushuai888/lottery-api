@@ -30,6 +30,8 @@ export default function Home() {
       time_ago: string
     }
   } | null>(null)
+  const [autoRefresh, setAutoRefresh] = useState(true) // 自动刷新开关
+  const [latestIssue, setLatestIssue] = useState<string>('') // 记录最新期号
 
   // 加载彩种列表
   useEffect(() => {
@@ -65,10 +67,53 @@ export default function Home() {
         if (data.success) {
           setResults(data.data)
           setTotalPages(data.pagination.totalPages)
+          // 记录最新期号
+          if (data.data.length > 0) {
+            setLatestIssue(data.data[0].issue)
+          }
         }
       })
       .finally(() => setLoading(false))
   }, [selectedLottery, page])
+
+  // 自动刷新：定时检查最新数据
+  useEffect(() => {
+    if (!selectedLottery || !autoRefresh) return
+
+    const checkForUpdates = async () => {
+      try {
+        // 获取最新一期数据
+        const res = await fetch(`/api/lottery-results/latest?lottery_code=${selectedLottery}`)
+        const data = await res.json()
+        
+        if (data.success && data.data && data.data.length > 0) {
+          const newLatestIssue = data.data[0].issue
+          
+          // 如果发现新期号，刷新数据
+          if (latestIssue && newLatestIssue !== latestIssue) {
+            console.log(`🔄 检测到新开奖: ${selectedLottery} ${newLatestIssue}`)
+            
+            // 刷新当前页面的数据
+            const refreshRes = await fetch(`/api/lottery-results?lottery_code=${selectedLottery}&page=${page}&limit=20`)
+            const refreshData = await refreshRes.json()
+            
+            if (refreshData.success) {
+              setResults(refreshData.data)
+              setTotalPages(refreshData.pagination.totalPages)
+              setLatestIssue(newLatestIssue)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('检查更新失败:', error)
+      }
+    }
+
+    // 每 30 秒检查一次
+    const interval = setInterval(checkForUpdates, 30000)
+
+    return () => clearInterval(interval)
+  }, [selectedLottery, page, latestIssue, autoRefresh])
 
   // 手动触发采集
   const handleCollect = async () => {
@@ -333,14 +378,30 @@ export default function Home() {
           
           {/* 彩种选择 */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              选择彩种
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                选择彩种
+              </label>
+              {selectedLottery && (
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={autoRefresh}
+                    onChange={(e) => setAutoRefresh(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    🔄 自动刷新 (30秒)
+                  </span>
+                </label>
+              )}
+            </div>
             <select
               value={selectedLottery}
               onChange={(e) => {
                 setSelectedLottery(e.target.value)
                 setPage(1)
+                setLatestIssue('')
               }}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
