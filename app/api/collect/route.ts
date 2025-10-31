@@ -148,25 +148,24 @@ async function processConcurrently<T, R>(
   limit: number
 ): Promise<R[]> {
   const results: R[] = []
-  const executing: Promise<void>[] = []
+  const executing: Set<Promise<void>> = new Set()
 
   for (const item of items) {
     const promise = processor(item).then(result => {
       results.push(result)
+      executing.delete(promise) // 完成后自动从集合中删除
     })
 
-    executing.push(promise)
+    executing.add(promise)
 
-    if (executing.length >= limit) {
+    // 当达到并发限制时，等待任意一个完成
+    if (executing.size >= limit) {
       await Promise.race(executing)
-      executing.splice(
-        executing.findIndex(p => p === promise),
-        1
-      )
     }
   }
 
-  await Promise.all(executing)
+  // 等待所有剩余的任务完成
+  await Promise.all(Array.from(executing))
   return results
 }
 
