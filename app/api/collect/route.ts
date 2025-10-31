@@ -80,7 +80,7 @@ async function processLottery(lotteryCode: string, results: any[]) {
         const { error, count } = await supabaseAdmin
           .from('lottery_results')
           .insert(batch)
-          .select('id', { count: 'exact', head: true })
+          .select('*', { count: 'exact' })
         
         if (!error && count !== null) {
           inserted += count
@@ -179,7 +179,7 @@ export async function POST(request: Request) {
       try {
         const { error: connectionError } = await supabaseAdmin
           .from('lottery_types')
-          .select('count', { count: 'exact', head: true })
+          .select('*', { count: 'exact', head: true })
         
         if (!connectionError) {
           dbConnected = true
