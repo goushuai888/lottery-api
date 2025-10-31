@@ -325,13 +325,9 @@ export async function POST(request: Request) {
 }
 
 // GET /api/collect - 获取采集状态
-export async function GET() {
-  return NextResponse.json({
-    success: true,
-    message: '数据采集 API',
-    endpoints: {
-      collect: 'POST /api/collect - 手动触发数据采集'
-    }
-  })
+// GET /api/collect - 支持直接访问链接采集
+export async function GET(request: Request) {
+  // 复用 POST 的采集逻辑
+  return POST(request)
 }
 
