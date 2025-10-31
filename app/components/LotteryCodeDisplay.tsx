@@ -80,7 +80,7 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
                 {prize.label}
               </div>
               <div className="flex gap-1 justify-center flex-wrap">
-                {(complexCode[prize.key] || '').split(',').map((num: string, idx: number) => (
+                {(typeof complexCode[prize.key] === 'string' ? complexCode[prize.key] : '').split(',').filter(n => n).map((num: string, idx: number) => (
                   <span
                     key={idx}
                     className={`inline-flex items-center justify-center ${sizeClasses[prize.size as keyof typeof sizeClasses]} rounded-lg bg-gradient-to-br from-amber-500 to-yellow-500 text-white font-bold shadow-sm`}
@@ -104,13 +104,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           🎲 MAX3D
         </div>
         {['code_1', 'code_2', 'code_3'].map((key, index) => (
-          complexCode[key] && (
+          complexCode[key] && typeof complexCode[key] === 'string' && (
             <div key={key} className="bg-white dark:bg-gray-800 rounded-md p-2">
               <div className="text-xs font-bold text-purple-600 dark:text-purple-400 mb-1 text-center">
                 第{index + 1}组
               </div>
               <div className="flex gap-1.5 justify-center">
-                {complexCode[key].split(',').map((num: string, idx: number) => (
+                {complexCode[key].split(',').filter((n: string) => n).map((num: string, idx: number) => (
                   <span
                     key={idx}
                     className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm shadow-md"
@@ -122,13 +122,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
             </div>
           )
         ))}
-        {complexCode.code_sp && (
+        {complexCode.code_sp && typeof complexCode.code_sp === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2">
             <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-1 text-center">
               ⭐ 特别号
             </div>
             <div className="flex gap-1.5 justify-center">
-              {complexCode.code_sp.split(',').map((num: string, idx: number) => (
+              {complexCode.code_sp.split(',').filter((n: string) => n).map((num: string, idx: number) => (
                 <span
                   key={idx}
                   className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-red-500 text-white font-bold text-base shadow-md border-2 border-pink-300"
@@ -151,38 +151,42 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           🇭🇰 港式彩票
         </div>
         {/* 主要号码 */}
-        <div>
-          <div className="text-xs font-bold text-amber-700 dark:text-amber-400 mb-2">
-            🎰 主要号码
+        {typeof complexCode.code === 'string' && (
+          <div>
+            <div className="text-xs font-bold text-amber-700 dark:text-amber-400 mb-2">
+              🎰 主要号码
+            </div>
+            <div className="flex gap-2 justify-center">
+              {complexCode.code.split(',').filter(n => n).map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 text-white font-bold text-lg shadow-md border-2 border-amber-300"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-2 justify-center">
-            {complexCode.code.split(',').map((num: string, idx: number) => (
-              <span
-                key={idx}
-                className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 text-white font-bold text-lg shadow-md border-2 border-amber-300"
-              >
-                {num}
-              </span>
-            ))}
-          </div>
-        </div>
+        )}
         
         {/* 附加号码 */}
-        <div>
-          <div className="text-xs font-bold text-orange-700 dark:text-orange-400 mb-2">
-            ✨ 附加号码
+        {typeof complexCode.code1 === 'string' && (
+          <div>
+            <div className="text-xs font-bold text-orange-700 dark:text-orange-400 mb-2">
+              ✨ 附加号码
+            </div>
+            <div className="flex gap-2 justify-center">
+              {complexCode.code1.split(',').filter(n => n).map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-orange-400 to-red-400 text-white font-bold text-base shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-2 justify-center">
-            {complexCode.code1.split(',').map((num: string, idx: number) => (
-              <span
-                key={idx}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-orange-400 to-red-400 text-white font-bold text-base shadow-sm"
-              >
-                {num}
-              </span>
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     )
   }
@@ -202,13 +206,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           🇹🇭 泰国政府彩票
         </div>
         {prizes.map((prize, index) => (
-          complexCode[prize.key] && (
+          complexCode[prize.key] && typeof complexCode[prize.key] === 'string' && (
             <div key={prize.key} className="bg-white dark:bg-gray-800 rounded-md p-2">
               <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-1 text-center">
                 {prize.label}
               </div>
               <div className="flex gap-1.5 justify-center flex-wrap">
-                {complexCode[prize.key].split(',').map((num: string, idx: number) => (
+                {complexCode[prize.key].split(',').filter(n => n).map((num: string, idx: number) => (
                   <span
                     key={idx}
                     className={`inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br ${prize.color} text-white font-bold text-sm shadow-md`}
@@ -232,21 +236,23 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           🎯 带后缀彩票
         </div>
         {/* 主要号码 */}
-        <div>
-          <div className="text-xs font-bold text-teal-700 dark:text-teal-400 mb-2">
-            主要号码
+        {typeof complexCode.code === 'string' && (
+          <div>
+            <div className="text-xs font-bold text-teal-700 dark:text-teal-400 mb-2">
+              主要号码
+            </div>
+            <div className="flex gap-2 justify-center flex-wrap">
+              {complexCode.code.split(',').filter(n => n).map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 text-white font-bold text-base shadow-md"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-2 justify-center flex-wrap">
-            {complexCode.code.split(',').map((num: string, idx: number) => (
-              <span
-                key={idx}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 text-white font-bold text-base shadow-md"
-              >
-                {num}
-              </span>
-            ))}
-          </div>
-        </div>
+        )}
         
         {/* 辅助号码 */}
         <div className="grid grid-cols-3 gap-2 text-xs">
@@ -287,13 +293,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           💎 ZCVIP
         </div>
         <div className="grid grid-cols-2 gap-2">
-          {complexCode.code && (
+          {complexCode.code && typeof complexCode.code === 'string' && (
             <div className="bg-white dark:bg-gray-800 rounded-md p-2">
               <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1 text-center">
                 主号
               </div>
               <div className="flex gap-1 justify-center flex-wrap">
-                {complexCode.code.split(',').map((num: string, idx: number) => (
+                {complexCode.code.split(',').filter(n => n).map((num: string, idx: number) => (
                   <span
                     key={idx}
                     className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-md"
@@ -304,13 +310,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
               </div>
             </div>
           )}
-          {complexCode.code2 && (
+          {complexCode.code2 && typeof complexCode.code2 === 'string' && (
             <div className="bg-white dark:bg-gray-800 rounded-md p-2">
               <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1 text-center">
                 副号
               </div>
               <div className="flex gap-1 justify-center flex-wrap">
-                {complexCode.code2.split(',').map((num: string, idx: number) => (
+                {complexCode.code2.split(',').filter(n => n).map((num: string, idx: number) => (
                   <span
                     key={idx}
                     className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm shadow-md"
@@ -351,13 +357,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
     return (
       <div className="space-y-2 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-lg">
         {/* 特别奖 */}
-        {complexCode.code && (
+        {complexCode.code && typeof complexCode.code === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
             <div className="text-xs font-bold text-red-600 dark:text-red-400 mb-2 text-center">
               ⭐ 特别奖
             </div>
             <div className="flex gap-1.5 justify-center flex-wrap">
-              {complexCode.code.split(',').map((num: string, idx: number) => (
+              {complexCode.code.split(',').filter(n => n).map((num: string, idx: number) => (
                 <span
                   key={idx}
                   className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-red-500 to-pink-600 text-white font-bold text-base shadow-md border-2 border-red-300"
@@ -370,13 +376,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         )}
 
         {/* 一等奖 */}
-        {complexCode.code1 && (
+        {complexCode.code1 && typeof complexCode.code1 === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
             <div className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-2 text-center">
               🥇 一等奖
             </div>
             <div className="flex gap-1.5 justify-center flex-wrap">
-              {complexCode.code1.split(',').map((num: string, idx: number) => (
+              {complexCode.code1.split(',').filter((n: string) => n).map((num: string, idx: number) => (
                 <span
                   key={idx}
                   className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-white font-bold text-sm shadow-md"
@@ -389,13 +395,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         )}
 
         {/* 二等奖 */}
-        {complexCode.code2 && (
+        {complexCode.code2 && typeof complexCode.code2 === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
             <div className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-2 text-center">
               🥈 二等奖
             </div>
             <div className="flex gap-1.5 justify-center flex-wrap">
-              {complexCode.code2.split(',').map((num: string, idx: number) => (
+              {complexCode.code2.split(',').filter((n: string) => n).map((num: string, idx: number) => (
                 <span
                   key={idx}
                   className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white font-bold text-sm shadow-md"
@@ -457,13 +463,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         )}
 
         {/* 五等奖 */}
-        {complexCode.code5 && (
+        {complexCode.code5 && typeof complexCode.code5 === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
             <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-2 text-center">
               🎲 五等奖
             </div>
             <div className="flex gap-1 justify-center">
-              {complexCode.code5.split(',').map((num: string, idx: number) => (
+              {complexCode.code5.split(',').filter((n: string) => n).map((num: string, idx: number) => (
                 <span
                   key={idx}
                   className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-gradient-to-br from-indigo-400 to-purple-400 text-white font-bold text-xs shadow-sm"
@@ -503,13 +509,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
 
         {/* 七等奖和八等奖 */}
         <div className="grid grid-cols-2 gap-2">
-          {complexCode.code7 && (
+          {complexCode.code7 && typeof complexCode.code7 === 'string' && (
             <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
               <div className="text-xs font-bold text-teal-600 dark:text-teal-400 mb-2 text-center">
                 🎨 七等奖
               </div>
               <div className="flex gap-0.5 justify-center">
-                {complexCode.code7.split(',').map((num: string, idx: number) => (
+                {complexCode.code7.split(',').filter((n: string) => n).map((num: string, idx: number) => (
                   <span
                     key={idx}
                     className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-teal-400 to-green-400 text-white font-bold text-xs shadow-sm"
@@ -521,13 +527,13 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
             </div>
           )}
           
-          {complexCode.code8 && (
+          {complexCode.code8 && typeof complexCode.code8 === 'string' && (
             <div className="bg-white dark:bg-gray-800 rounded-md p-2 shadow-sm">
               <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-2 text-center">
                 🎁 八等奖
               </div>
               <div className="flex gap-0.5 justify-center">
-                {complexCode.code8.split(',').map((num: string, idx: number) => (
+                {complexCode.code8.split(',').filter((n: string) => n).map((num: string, idx: number) => (
                   <span
                     key={idx}
                     className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-pink-400 to-rose-400 text-white font-bold text-xs shadow-sm"
