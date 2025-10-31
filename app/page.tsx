@@ -115,9 +115,15 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
             🎰 彩票开奖数据采集平台
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
             免费提供彩票开奖数据 API 接口 · 数据库已优化至 S 级
           </p>
+          <a
+            href="/api-docs"
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+          >
+            📖 查看 API 文档
+          </a>
         </div>
 
         {/* 统计面板 */}
