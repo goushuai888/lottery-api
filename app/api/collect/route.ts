@@ -25,12 +25,46 @@ async function processLottery(lotteryCode: string, results: any[]) {
   }
 
   try {
-    // 🚀 性能优化：只处理最新的 3 期数据
-    // 数据源返回 10 期历史数据，但大部分已经在数据库中
-    // 只采集最新 3 期可以大幅提升速度（从处理1790条降到537条）
-    const latestResults = results.slice(0, 3)
+    // 🚀 智能采集策略：检测并补齐缺失数据
+    // 1. 数据源返回最近 10 期历史数据
+    // 2. 查询数据库，找出这 10 期中哪些已存在
+    // 3. 只处理数据库中不存在的期号（新期 + 补齐丢失的旧期）
+    // 优势：既能及时采集新数据，又能自动补齐之前丢失的数据
     
-    const records = latestResults.map((item: any) => {
+    // 首先查询这个彩种在数据源返回的所有期号中，哪些已经在数据库中
+    const allIssues = results.map(r => r.issue)
+    const existingIssues = new Set<string>()
+    
+    try {
+      const { data: existing } = await supabaseAdmin
+        .from('lottery_results')
+        .select('issue')
+        .eq('lottery_code', lotteryCode)
+        .in('issue', allIssues)
+      
+      if (existing) {
+        existing.forEach(item => existingIssues.add(item.issue))
+      }
+    } catch (error) {
+      console.warn(`⚠️  ${lotteryCode} 查询已有记录失败，将全部尝试插入`)
+    }
+    
+    // 只处理数据库中不存在的期号（新数据 + 缺失的历史数据）
+    const missingResults = results.filter(r => !existingIssues.has(r.issue))
+    
+    if (missingResults.length === 0) {
+      // 所有数据都已存在，跳过此彩种
+      return {
+        lottery_code: lotteryCode,
+        success: true,
+        inserted: 0,
+        updated: 0,
+        skipped: results.length,
+        total: results.length
+      }
+    }
+    
+    const records = missingResults.map((item: any) => {
       let codeValue: any
       
       if (typeof item.code === 'string') {
@@ -50,35 +84,14 @@ async function processLottery(lotteryCode: string, results: any[]) {
       }
     })
 
-    // 先查询已存在的记录
-    const existingIssues = new Set<string>()
-    try {
-      const { data: existing } = await supabaseAdmin
-        .from('lottery_results')
-        .select('issue')
-        .eq('lottery_code', lotteryCode)
-        .in('issue', records.map(r => r.issue))
-      
-      if (existing) {
-        existing.forEach(item => existingIssues.add(item.issue))
-      }
-    } catch (error) {
-      console.warn(`⚠️  ${lotteryCode} 查询已有记录失败，将全部尝试插入`)
-    }
-
-    // 分类：新增和更新
-    const newRecords = records.filter(r => !existingIssues.has(r.issue))
-    const updateRecords = records.filter(r => existingIssues.has(r.issue))
-
+    // 所有 records 都是缺失的数据，直接插入
     let inserted = 0
     let updated = 0
-    let failed = 0
 
-    // 处理新增记录
-    if (newRecords.length > 0) {
+    if (records.length > 0) {
       const batches = []
-      for (let i = 0; i < newRecords.length; i += BATCH_SIZE) {
-        batches.push(newRecords.slice(i, i + BATCH_SIZE))
+      for (let i = 0; i < records.length; i += BATCH_SIZE) {
+        batches.push(records.slice(i, i + BATCH_SIZE))
       }
 
       for (const batch of batches) {
@@ -90,35 +103,21 @@ async function processLottery(lotteryCode: string, results: any[]) {
         if (!error && data) {
           inserted += data.length
         } else if (error) {
-          // 可能是并发导致的唯一约束冲突，计入更新
-          updated += batch.length
+          // 可能是并发导致的唯一约束冲突，尝试 upsert
+          const { error: upsertError } = await supabaseAdmin
+            .from('lottery_results')
+            .upsert(batch, { 
+              onConflict: 'lottery_code,issue'
+            })
+          
+          if (!upsertError) {
+            updated += batch.length
+          }
         }
       }
     }
 
-    // 处理更新记录（使用 upsert）
-    if (updateRecords.length > 0) {
-      const batches = []
-      for (let i = 0; i < updateRecords.length; i += BATCH_SIZE) {
-        batches.push(updateRecords.slice(i, i + BATCH_SIZE))
-      }
-
-      for (const batch of batches) {
-        const { error } = await supabaseAdmin
-          .from('lottery_results')
-          .upsert(batch, { 
-            onConflict: 'lottery_code,issue'
-          })
-        
-        if (!error) {
-          updated += batch.length
-        } else {
-          failed += batch.length
-        }
-      }
-    }
-
-    const skipped = records.length - inserted - updated - failed
+    const skipped = results.length - records.length
 
     return {
       lottery_code: lotteryCode,
