@@ -177,16 +177,7 @@ export async function POST(request: Request) {
   
   try {
     console.log('🔄 开始采集开奖数据...')
-    
-    // 等待分分彩开奖（每分钟第 8 秒开奖，等待到第 8 秒后再采集）
-    const now = new Date()
-    const currentSecond = now.getSeconds()
-    if (currentSecond < 8) {
-      const waitTime = (8 - currentSecond) * 1000
-      console.log(`⏳ 等待分分彩开奖... (${8 - currentSecond}秒)`)
-      await new Promise(resolve => setTimeout(resolve, waitTime))
-      console.log('✅ 等待完成，开始采集')
-    }
+    console.log(`📅 采集时间: ${new Date().toISOString()}`)
     
     // 检查 Supabase 连接（带重试）
     let dbConnected = false
