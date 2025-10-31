@@ -9,14 +9,6 @@ export default function Home() {
   const [selectedLottery, setSelectedLottery] = useState<string>('')
   const [results, setResults] = useState<LotteryResult[]>([])
   const [loading, setLoading] = useState(false)
-  const [collectLoading, setCollectLoading] = useState(false)
-  const [collectStatus, setCollectStatus] = useState<{
-    inserted: number
-    updated: number
-    skipped: number
-    processed: number
-    duration: number
-  } | null>(null)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [statistics, setStatistics] = useState<{
@@ -114,65 +106,6 @@ export default function Home() {
 
     return () => clearInterval(interval)
   }, [selectedLottery, page, latestIssue, autoRefresh])
-
-  // 手动触发采集
-  const handleCollect = async () => {
-    setCollectLoading(true)
-    setCollectStatus(null)
-    
-    try {
-      const res = await fetch('/api/collect', { method: 'POST' })
-      const data = await res.json()
-      
-      if (data.success) {
-        setCollectStatus({
-          inserted: data.summary.total_inserted,
-          updated: data.summary.total_updated,
-          skipped: data.summary.total_skipped,
-          processed: data.summary.total_processed,
-          duration: data.summary.duration_seconds
-        })
-        
-        // 刷新统计信息
-        fetch('/api/statistics')
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              setStatistics(data.summary)
-            }
-          })
-        
-        // 刷新当前数据
-        if (selectedLottery) {
-          const res = await fetch(`/api/lottery-results?lottery_code=${selectedLottery}&page=${page}&limit=20`)
-          const refreshData = await res.json()
-          if (refreshData.success) {
-            setResults(refreshData.data)
-          }
-        }
-      } else {
-        const errorMsg = data.error || 'Unknown error'
-        const helpMsg = data.help || ''
-        
-        // 检查是否是网络连接问题
-        const isNetworkError = errorMsg.includes('fetch failed') || 
-                               errorMsg.includes('数据源连接失败') ||
-                               errorMsg.includes('ECONNRESET')
-        
-        if (isNetworkError) {
-          alert(`⚠️ 数据源暂时无法访问\n\n这是数据源服务器的网络问题，不是代码问题。\n\n建议：\n1. 稍后再试（通常几秒后就恢复）\n2. 数据已经自动重试3次\n3. 大部分数据采集仍然成功\n\n详情: ${errorMsg}`)
-        } else {
-          alert(`采集失败：${errorMsg}\n\n${helpMsg}`)
-        }
-        console.error('采集错误详情:', data.error_details)
-      }
-    } catch (error: any) {
-      alert(`采集失败：${error.message || error}\n\n请检查:\n1. 网络连接\n2. 服务器是否运行\n3. 环境变量配置`)
-      console.error('采集异常:', error)
-    } finally {
-      setCollectLoading(false)
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -274,100 +207,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* 数据采集 */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                🔄 数据采集
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                点击按钮手动触发数据采集（采用并发处理，速度更快）
-              </p>
-              {statistics?.latest_draw && (
-                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                  💡 最新开奖: {statistics.latest_draw.lottery_code} · {statistics.latest_draw.issue} · {statistics.latest_draw.time_ago}
-                </div>
-              )}
-            </div>
-            <button
-              onClick={handleCollect}
-              disabled={collectLoading}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-            >
-              {collectLoading && (
-                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              )}
-              {collectLoading ? '采集中...' : '⚡ 立即采集'}
-            </button>
-          </div>
-          
-          {/* 采集结果显示 */}
-          {collectStatus && (
-            <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <svg className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm font-medium text-green-800 dark:text-green-300">
-                    采集完成
-                  </span>
-                </div>
-                <div className="flex items-center gap-6 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600 dark:text-gray-400">总计:</span>
-                    <span className="font-bold text-gray-800 dark:text-white">{collectStatus.processed}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600 dark:text-gray-400">🆕新增:</span>
-                    <span className="font-bold text-blue-600 dark:text-blue-400">{collectStatus.inserted}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600 dark:text-gray-400">📋已存在:</span>
-                    <span className="font-bold text-gray-600 dark:text-gray-400">{collectStatus.updated}</span>
-                  </div>
-                  {collectStatus.skipped > 0 && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-600 dark:text-gray-400">⚠️失败:</span>
-                      <span className="font-bold text-orange-600 dark:text-orange-400">{collectStatus.skipped}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600 dark:text-gray-400">⏱️耗时:</span>
-                    <span className="font-bold text-green-600 dark:text-green-400">{collectStatus.duration.toFixed(2)}s</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* 采集中的进度提示 */}
-          {collectLoading && (
-            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="flex items-center gap-3">
-                <div className="flex-shrink-0">
-                  <svg className="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
-                    正在采集数据...
-                  </p>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                    使用 10 个并发连接处理 170+ 个彩种，请稍候...
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* 数据查看 */}
