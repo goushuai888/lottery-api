@@ -2,12 +2,6 @@
   "buildCommand": "pnpm build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "regions": ["hnd1"],
-  "crons": [
-    {
-      "path": "/api/collect",
-      "schedule": "* * * * *"
-    }
-  ]
+  "regions": ["hnd1"]
 }
 
