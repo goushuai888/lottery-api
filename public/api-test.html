@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彩票 API 测试工具</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .content { padding: 40px; }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        select, input, button {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        select, input { flex: 1; min-width: 200px; }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+        .results {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .result-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        .result-item strong { color: #667eea; }
+        .numbers {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(255,107,107,0.3);
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 18px;
+        }
+        .api-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .api-info code {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #d63384;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎰 彩票 API 测试工具</h1>
+            <p>免费彩票开奖数据 API 接口测试</p>
+        </div>
+
+        <div class="content">
+            <!-- API 信息 -->
+            <div class="api-info">
+                <strong>📡 API 基础地址:</strong> <code id="apiBase">http://localhost:3000/api</code>
+            </div>
+
+            <!-- 测试 1: 获取彩种列表 -->
+            <div class="section">
+                <h2>1️⃣ 获取彩种列表</h2>
+                <div class="controls">
+                    <button onclick="loadLotteryTypes()">🔄 获取所有彩种</button>
+                </div>
+                <div class="code-block">
+                    <div>GET /api/lottery-types</div>
+                </div>
+                <div id="lotteryTypes" class="results"></div>
+            </div>
+
+            <!-- 测试 2: 获取开奖记录 -->
+            <div class="section">
+                <h2>2️⃣ 获取开奖记录</h2>
+                <div class="controls">
+                    <select id="lotterySelect">
+                        <option value="">请先加载彩种列表</option>
+                    </select>
+                    <input type="number" id="pageInput" placeholder="页码" value="1" min="1">
+                    <input type="number" id="limitInput" placeholder="每页数量" value="10" min="1" max="100">
+                    <button onclick="loadResults()">🔍 查询开奖</button>
+                </div>
+                <div class="code-block">
+                    <div>GET /api/lottery-results?lottery_code=<span id="selectedCode">YN60</span>&page=1&limit=10</div>
+                </div>
+                <div id="results" class="results"></div>
+            </div>
+
+            <!-- 测试 3: 获取最新开奖 -->
+            <div class="section">
+                <h2>3️⃣ 获取最新开奖</h2>
+                <div class="controls">
+                    <button onclick="loadLatest()">⚡ 获取所有彩种最新开奖</button>
+                    <button onclick="loadLatestByCode()">🎯 获取当前彩种最新开奖</button>
+                </div>
+                <div class="code-block">
+                    <div>GET /api/lottery-results/latest</div>
+                </div>
+                <div id="latest" class="results"></div>
+            </div>
+
+            <!-- API 文档链接 -->
+            <div class="section">
+                <h2>📚 更多资源</h2>
+                <p>
+                    <span class="badge">完整文档</span>
+                    查看项目根目录下的 <strong>API_GUIDE.md</strong> 获取详细使用说明
+                </p>
+                <p style="margin-top: 10px;">
+                    <span class="badge">在线演示</span>
+                    访问 <a href="/" style="color: #667eea;">http://localhost:3000</a> 查看完整网站
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api'
+
+        // 加载彩种列表
+        async function loadLotteryTypes() {
+            const container = document.getElementById('lotteryTypes')
+            container.innerHTML = '<div class="loading">加载中...</div>'
+
+            try {
+                const response = await fetch(`${API_BASE}/lottery-types?active=true`)
+                const data = await response.json()
+
+                if (data.success) {
+                    // 更新下拉列表
+                    const select = document.getElementById('lotterySelect')
+                    select.innerHTML = '<option value="">选择彩种</option>'
+                    data.data.forEach(lottery => {
+                        const option = document.createElement('option')
+                        option.value = lottery.lottery_code
+                        option.textContent = `${lottery.lottery_name} (${lottery.lottery_code})`
+                        select.appendChild(option)
+                    })
+
+                    // 显示结果
+                    container.innerHTML = `
+                        <div class="result-item">
+                            <strong>✅ 成功获取 ${data.total} 个彩种</strong>
+                            <div style="margin-top: 10px;">
+                                ${data.data.slice(0, 10).map(item => 
+                                    `<div style="padding: 5px 0;">
+                                        <span class="badge">${item.lottery_code}</span>
+                                        ${item.lottery_name}
+                                    </div>`
+                                ).join('')}
+                                ${data.total > 10 ? `<div style="margin-top: 10px; color: #666;">...还有 ${data.total - 10} 个彩种</div>` : ''}
+                            </div>
+                        </div>
+                    `
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="result-item">❌ 加载失败: ${error.message}</div>`
+            }
+        }
+
+        // 加载开奖记录
+        async function loadResults() {
+            const lotteryCode = document.getElementById('lotterySelect').value
+            if (!lotteryCode) {
+                alert('请先选择彩种')
+                return
+            }
+
+            const page = document.getElementById('pageInput').value
+            const limit = document.getElementById('limitInput').value
+            const container = document.getElementById('results')
+            
+            document.getElementById('selectedCode').textContent = lotteryCode
+            container.innerHTML = '<div class="loading">加载中...</div>'
+
+            try {
+                const url = `${API_BASE}/lottery-results?lottery_code=${lotteryCode}&page=${page}&limit=${limit}`
+                const response = await fetch(url)
+                const data = await response.json()
+
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(item => `
+                        <div class="result-item">
+                            <strong>🎯 奖期: ${item.issue}</strong>
+                            <div class="numbers">
+                                ${item.code.split(',').map(num => 
+                                    `<div class="number">${num}</div>`
+                                ).join('')}
+                            </div>
+                            <div style="color: #666; font-size: 14px;">
+                                开奖时间: ${new Date(item.open_date).toLocaleString('zh-CN')}
+                            </div>
+                        </div>
+                    `).join('')
+                    
+                    container.innerHTML += `
+                        <div class="result-item" style="background: #e3f2fd;">
+                            <strong>📊 分页信息</strong><br>
+                            当前页: ${data.pagination.page} / ${data.pagination.totalPages}<br>
+                            总记录数: ${data.pagination.total}
+                        </div>
+                    `
+                } else {
+                    container.innerHTML = '<div class="result-item">暂无数据</div>'
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="result-item">❌ 加载失败: ${error.message}</div>`
+            }
+        }
+
+        // 加载所有彩种最新开奖
+        async function loadLatest() {
+            const container = document.getElementById('latest')
+            container.innerHTML = '<div class="loading">加载中...</div>'
+
+            try {
+                const response = await fetch(`${API_BASE}/lottery-results/latest`)
+                const data = await response.json()
+
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(item => `
+                        <div class="result-item">
+                            <strong>
+                                <span class="badge">${item.lottery_code}</span>
+                                ${item.issue}
+                            </strong>
+                            <div class="numbers">
+                                ${item.code.split(',').map(num => 
+                                    `<div class="number">${num}</div>`
+                                ).join('')}
+                            </div>
+                            <div style="color: #666; font-size: 14px;">
+                                ${new Date(item.open_date).toLocaleString('zh-CN')}
+                            </div>
+                        </div>
+                    `).join('')
+                } else {
+                    container.innerHTML = '<div class="result-item">暂无数据</div>'
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="result-item">❌ 加载失败: ${error.message}</div>`
+            }
+        }
+
+        // 加载指定彩种最新开奖
+        async function loadLatestByCode() {
+            const lotteryCode = document.getElementById('lotterySelect').value
+            if (!lotteryCode) {
+                alert('请先选择彩种')
+                return
+            }
+
+            const container = document.getElementById('latest')
+            container.innerHTML = '<div class="loading">加载中...</div>'
+
+            try {
+                const response = await fetch(`${API_BASE}/lottery-results/latest?lottery_code=${lotteryCode}`)
+                const data = await response.json()
+
+                if (data.success && data.data) {
+                    const item = data.data
+                    container.innerHTML = `
+                        <div class="result-item">
+                            <strong>
+                                <span class="badge">${item.lottery_code}</span>
+                                ${item.issue}
+                            </strong>
+                            <div class="numbers">
+                                ${item.code.split(',').map(num => 
+                                    `<div class="number">${num}</div>`
+                                ).join('')}
+                            </div>
+                            <div style="color: #666; font-size: 14px;">
+                                开奖时间: ${new Date(item.open_date).toLocaleString('zh-CN')}
+                            </div>
+                        </div>
+                    `
+                } else {
+                    container.innerHTML = '<div class="result-item">暂无数据</div>'
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="result-item">❌ 加载失败: ${error.message}</div>`
+            }
+        }
+
+        // 页面加载时自动获取彩种列表
+        window.addEventListener('load', () => {
+            loadLotteryTypes()
+        })
+    </script>
+</body>
+</html>
+
