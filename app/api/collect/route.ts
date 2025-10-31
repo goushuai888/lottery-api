@@ -173,12 +173,12 @@ export async function POST(request: Request) {
   try {
     console.log('🔄 开始采集开奖数据...')
     
-    // 等待分分彩开奖（每分钟第 8 秒开奖，等待 12 秒确保数据已生成）
+    // 等待分分彩开奖并且数据源更新（每分钟第 8 秒开奖，数据源约第 15-20 秒更新）
     const now = new Date()
     const currentSecond = now.getSeconds()
-    if (currentSecond < 12) {
-      const waitTime = (12 - currentSecond) * 1000
-      console.log(`⏳ 等待分分彩开奖... (${12 - currentSecond}秒)`)
+    if (currentSecond < 20) {
+      const waitTime = (20 - currentSecond) * 1000
+      console.log(`⏳ 等待分分彩开奖和数据源更新... (${20 - currentSecond}秒)`)
       await new Promise(resolve => setTimeout(resolve, waitTime))
       console.log('✅ 等待完成，开始采集')
     }
