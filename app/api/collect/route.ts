@@ -25,7 +25,12 @@ async function processLottery(lotteryCode: string, results: any[]) {
   }
 
   try {
-    const records = results.map((item: any) => {
+    // 🚀 性能优化：只处理最新的 3 期数据
+    // 数据源返回 10 期历史数据，但大部分已经在数据库中
+    // 只采集最新 3 期可以大幅提升速度（从处理1790条降到537条）
+    const latestResults = results.slice(0, 3)
+    
+    const records = latestResults.map((item: any) => {
       let codeValue: any
       
       if (typeof item.code === 'string') {
