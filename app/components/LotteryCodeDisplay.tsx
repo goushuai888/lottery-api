@@ -31,16 +31,18 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   if (complexCode.code_hash) {
     return (
       <div className="space-y-2">
-        <div className="flex gap-2 flex-wrap">
-          {complexCode.code?.split(',').map((num: string, idx: number) => (
-            <span
-              key={idx}
-              className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-white font-bold text-sm shadow-md"
-            >
-              {num}
-            </span>
-          ))}
-        </div>
+        {typeof complexCode.code === 'string' && (
+          <div className="flex gap-2 flex-wrap">
+            {complexCode.code.split(',').filter(n => n).map((num: string, idx: number) => (
+              <span
+                key={idx}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-white font-bold text-sm shadow-md"
+              >
+                {num}
+              </span>
+            ))}
+          </div>
+        )}
         <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
           <div>区块: {complexCode.code_block}</div>
           <div className="truncate">哈希: {complexCode.code_hash}</div>
@@ -420,20 +422,22 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
               🥉 三等奖 (2组)
             </div>
             <div className="flex gap-4 justify-center flex-wrap">
-              {complexCode.code3.map((codeStr: string, groupIdx: number) => (
-                <div 
-                  key={groupIdx} 
-                  className="flex gap-1 p-1.5 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-md border border-green-200 dark:border-green-700"
-                >
-                  {codeStr.split(',').map((num: string, idx: number) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-gradient-to-br from-green-500 to-emerald-500 text-white font-bold text-xs shadow-sm"
-                    >
-                      {num}
-                    </span>
-                  ))}
-                </div>
+              {complexCode.code3.map((codeStr: any, groupIdx: number) => (
+                typeof codeStr === 'string' && (
+                  <div 
+                    key={groupIdx} 
+                    className="flex gap-1 p-1.5 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-md border border-green-200 dark:border-green-700"
+                  >
+                    {codeStr.split(',').filter((n: string) => n).map((num: string, idx: number) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-gradient-to-br from-green-500 to-emerald-500 text-white font-bold text-xs shadow-sm"
+                      >
+                        {num}
+                      </span>
+                    ))}
+                  </div>
+                )
               ))}
             </div>
           </div>
@@ -446,17 +450,19 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
               🎯 四等奖
             </div>
             <div className="grid grid-cols-2 gap-1.5">
-              {complexCode.code4.map((codeStr: string, groupIdx: number) => (
-                <div key={groupIdx} className="flex gap-0.5 justify-center">
-                  {codeStr.split(',').map((num: string, idx: number) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-purple-400 to-pink-400 text-white font-bold text-xs shadow-sm"
-                    >
-                      {num}
-                    </span>
-                  ))}
-                </div>
+              {complexCode.code4.map((codeStr: any, groupIdx: number) => (
+                typeof codeStr === 'string' && (
+                  <div key={groupIdx} className="flex gap-0.5 justify-center">
+                    {codeStr.split(',').filter((n: string) => n).map((num: string, idx: number) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-purple-400 to-pink-400 text-white font-bold text-xs shadow-sm"
+                      >
+                        {num}
+                      </span>
+                    ))}
+                  </div>
+                )
               ))}
             </div>
           </div>
@@ -488,20 +494,22 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
               🎪 六等奖 (3组)
             </div>
             <div className="flex gap-4 justify-center flex-wrap">
-              {complexCode.code6.map((codeStr: string, groupIdx: number) => (
-                <div 
-                  key={groupIdx} 
-                  className="flex gap-0.5 p-1.5 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/30 dark:to-blue-900/30 rounded-md border border-cyan-200 dark:border-cyan-700"
-                >
-                  {codeStr.split(',').map((num: string, idx: number) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-cyan-400 to-blue-400 text-white font-bold text-xs shadow-sm"
-                    >
-                      {num}
-                    </span>
-                  ))}
-                </div>
+              {complexCode.code6.map((codeStr: any, groupIdx: number) => (
+                typeof codeStr === 'string' && (
+                  <div 
+                    key={groupIdx} 
+                    className="flex gap-0.5 p-1.5 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/30 dark:to-blue-900/30 rounded-md border border-cyan-200 dark:border-cyan-700"
+                  >
+                    {codeStr.split(',').filter((n: string) => n).map((num: string, idx: number) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-cyan-400 to-blue-400 text-white font-bold text-xs shadow-sm"
+                      >
+                        {num}
+                      </span>
+                    ))}
+                  </div>
+                )
               ))}
             </div>
           </div>
