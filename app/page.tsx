@@ -31,6 +31,11 @@ export default function Home() {
   // 越南传统彩票详情模态框
   const [modalOpen, setModalOpen] = useState(false)
   const [modalData, setModalData] = useState<{code: any, issue: string} | null>(null)
+  
+  // 彩票分类相关状态
+  const [activeCategory, setActiveCategory] = useState<string>('high_frequency')
+  const [categorizedLotteries, setCategorizedLotteries] = useState<Record<string, any>>({})
+  const [categoryLoading, setCategoryLoading] = useState(true)
 
   // 加载彩种列表
   useEffect(() => {
@@ -41,6 +46,19 @@ export default function Home() {
           setLotteryTypes(data.data)
         }
       })
+  }, [])
+
+  // 加载分类彩种
+  useEffect(() => {
+    setCategoryLoading(true)
+    fetch('/api/lottery-types/by-category')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setCategorizedLotteries(data.data)
+        }
+      })
+      .finally(() => setCategoryLoading(false))
   }, [])
 
   // 加载统计信息
@@ -241,6 +259,120 @@ export default function Home() {
               数据库 S 级优化，并发处理，响应速度快至毫秒级
             </p>
           </div>
+        </div>
+
+        {/* 彩票分类浏览 */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+            🎲 彩票分类
+          </h2>
+
+          {/* 分类标签 */}
+          <div className="flex flex-wrap gap-3 mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <button
+              onClick={() => setActiveCategory('high_frequency')}
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                activeCategory === 'high_frequency'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <span className="mr-2">⚡</span>
+              高频彩种
+            </button>
+            <button
+              onClick={() => setActiveCategory('low_frequency')}
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                activeCategory === 'low_frequency'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <span className="mr-2">🎯</span>
+              低频彩种
+            </button>
+            <button
+              onClick={() => setActiveCategory('super_speed')}
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                activeCategory === 'super_speed'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <span className="mr-2">🚀</span>
+              极速彩种
+            </button>
+            <button
+              onClick={() => setActiveCategory('overseas')}
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                activeCategory === 'overseas'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <span className="mr-2">🌏</span>
+              境外彩种
+            </button>
+            <button
+              onClick={() => setActiveCategory('calculated')}
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                activeCategory === 'calculated'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <span className="mr-2">💻</span>
+              计算型彩种
+            </button>
+          </div>
+
+          {/* 彩票列表 */}
+          {categoryLoading ? (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">加载中...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              {categorizedLotteries[activeCategory]?.lotteries?.map((lottery: LotteryType) => (
+                <div
+                  key={lottery.lottery_code}
+                  onClick={() => {
+                    setSelectedLottery(lottery.lottery_code)
+                    setPage(1)
+                    setLatestIssue('')
+                    // 滚动到数据查看区域
+                    document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
+                  }}
+                  className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200 border-2 border-transparent hover:border-blue-500"
+                >
+                  <div className="flex flex-col items-center text-center space-y-2">
+                    {/* 彩票图标占位 */}
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md">
+                      {lottery.lottery_name.charAt(0)}
+                    </div>
+                    {/* 彩票名称 */}
+                    <div className="text-sm font-medium text-gray-800 dark:text-white break-words w-full">
+                      {lottery.lottery_name}
+                    </div>
+                    {/* 彩票代码 */}
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {lottery.lottery_code}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 分类统计 */}
+          {!categoryLoading && categorizedLotteries[activeCategory] && (
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
+              当前分类共有 <span className="font-bold text-blue-600 dark:text-blue-400">
+                {categorizedLotteries[activeCategory]?.lotteries?.length || 0}
+              </span> 种彩票
+            </div>
+          )}
         </div>
 
         {/* 数据查看 */}
