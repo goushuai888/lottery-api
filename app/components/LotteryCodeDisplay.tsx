@@ -169,38 +169,52 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         <div className="text-xs font-bold text-purple-700 dark:text-purple-400 mb-2 text-center">
           🎲 MAX3D
         </div>
-        {['code_1', 'code_2', 'code_3'].map((key, index) => (
-          complexCode[key] && typeof complexCode[key] === 'string' && (
+        {['code_1', 'code_2', 'code_3'].map((key, index) => {
+          const codeData = complexCode[key]
+          if (!codeData) return null
+          
+          // 处理数组格式
+          const codeArray = Array.isArray(codeData) ? codeData : [codeData]
+          
+          return (
             <div key={key} className="bg-white dark:bg-gray-800 rounded-md p-2">
               <div className="text-xs font-bold text-purple-600 dark:text-purple-400 mb-1 text-center">
                 第{index + 1}组
               </div>
-              <div className="flex gap-1.5 justify-center">
-                {complexCode[key].split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm shadow-md"
-                  >
-                    {num}
-                  </span>
+              <div className="flex flex-col gap-1.5">
+                {codeArray.map((line: string, lineIdx: number) => (
+                  <div key={lineIdx} className="flex gap-1.5 justify-center">
+                    {(typeof line === 'string' ? line : String(line)).split(',').filter((n: string) => n).map((num: string, idx: number) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm shadow-md"
+                      >
+                        {num}
+                      </span>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
           )
-        ))}
-        {complexCode.code_sp && typeof complexCode.code_sp === 'string' && (
+        })}
+        {complexCode.code_sp && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2">
             <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-1 text-center">
               ⭐ 特别号
             </div>
-            <div className="flex gap-1.5 justify-center">
-              {complexCode.code_sp.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-red-500 text-white font-bold text-base shadow-md border-2 border-pink-300"
-                >
-                  {num}
-                </span>
+            <div className="flex flex-col gap-1.5">
+              {(Array.isArray(complexCode.code_sp) ? complexCode.code_sp : [complexCode.code_sp]).map((line: string, lineIdx: number) => (
+                <div key={lineIdx} className="flex gap-1.5 justify-center">
+                  {(typeof line === 'string' ? line : String(line)).split(',').filter((n: string) => n).map((num: string, idx: number) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-red-500 text-white font-bold text-base shadow-md border-2 border-pink-300"
+                    >
+                      {num}
+                    </span>
+                  ))}
+                </div>
               ))}
             </div>
           </div>
