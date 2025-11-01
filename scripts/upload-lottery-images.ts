@@ -3,12 +3,17 @@
  * 将官方采集源的图片下载并上传到 Supabase 存储桶
  */
 
+import dotenv from 'dotenv'
+import path from 'path'
+
+// 加载环境变量
+dotenv.config({ path: path.join(process.cwd(), '.env.local') })
+
 import { supabase } from '../lib/supabase'
 import https from 'https'
 import http from 'http'
 import { URL } from 'url'
 import fs from 'fs'
-import path from 'path'
 
 // 彩票代码到官方图片URL的映射
 const LOTTERY_IMAGE_URLS: Record<string, string> = {
