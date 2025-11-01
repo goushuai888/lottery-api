@@ -5,15 +5,26 @@
 
 import dotenv from 'dotenv'
 import path from 'path'
-
-// 加载环境变量
-dotenv.config({ path: path.join(process.cwd(), '.env.local') })
-
-import { supabase } from '../lib/supabase'
 import https from 'https'
 import http from 'http'
 import { URL } from 'url'
 import fs from 'fs'
+import { createClient } from '@supabase/supabase-js'
+
+// 加载环境变量（必须在其他导入之前）
+dotenv.config({ path: path.join(process.cwd(), '.env.local') })
+
+// 创建 Supabase 客户端
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Error: Missing Supabase credentials in .env.local')
+  console.error('Required: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY')
+  process.exit(1)
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 // 彩票代码到官方图片URL的映射
 const LOTTERY_IMAGE_URLS: Record<string, string> = {

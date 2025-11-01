@@ -342,12 +342,15 @@ export default function LotteryIcon({ lotteryCode, lotteryName, size = 'md' }: L
     lg: 'w-16 h-16 text-3xl'
   }
 
-  // 优先使用官方图片
+  // 优先使用 Supabase 存储的图片
   if (imageUrl) {
+    const fileExt = imageUrl.endsWith('.jpg') ? '.jpg' : '.png'
+    const supabaseImageUrl = `https://ixqsqmftydqsibrjkuyc.supabase.co/storage/v1/object/public/lottery-logos/${lotteryCode}${fileExt}`
+    
     return (
       <div className={`${sizeClasses[size]} relative rounded-full overflow-hidden shadow-md ring-2 ring-white dark:ring-gray-700`}>
         <img 
-          src={`https://vip.manycai.com${imageUrl}`}
+          src={supabaseImageUrl}
           alt={lotteryName}
           className="w-full h-full object-cover"
           onError={(e) => {
