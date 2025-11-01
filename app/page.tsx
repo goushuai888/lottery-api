@@ -191,74 +191,77 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
-        {/* Hero 区域 */}
-        <div className="text-center mb-16">
-          <div className="mb-6">
-            <span className="text-6xl mb-4 inline-block">🎰</span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-800 dark:text-white mb-6">
+        {/* Hero 区域 - 简约现代风格 */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-3">
             彩票开奖数据 API 平台
           </h1>
-          <p className="text-xl text-text-muted dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-base text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
             专业的彩票开奖数据服务 · 179 个彩种 · 实时更新 · 完全免费
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <a
               href="/api-docs"
-              className="inline-flex items-center gap-2 bg-gradient-primary hover:opacity-90 text-white font-semibold px-8 py-4 rounded-lg transition-all shadow-card hover:shadow-lg hover:scale-105"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
             >
-              <span className="text-xl">📖</span>
+              <span>📖</span>
               <span>查看 API 文档</span>
             </a>
             <a
               href="#data-view"
-              className="inline-flex items-center gap-2 bg-bg-white dark:bg-gray-800 hover:bg-bg-light dark:hover:bg-gray-700 text-text-dark dark:text-white font-semibold px-8 py-4 rounded-lg transition-all shadow-card hover:shadow-lg border border-border dark:border-gray-700"
+              className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-white font-medium px-6 py-2.5 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
             >
-              <span className="text-xl">📊</span>
+              <span>📊</span>
               <span>查看开奖数据</span>
             </a>
           </div>
         </div>
 
-        {/* 统计面板 */}
+        {/* 统计面板 - 简约现代风格 */}
         {statistics && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-blue rounded-lg shadow-card p-6 text-white hover:shadow-lg transition-shadow">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100 text-sm font-medium">彩票类型</p>
-                  <p className="text-3xl font-bold mt-2">
+                  <p className="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wide mb-1">彩票类型</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     <AnimatedNumber value={statistics.total_lottery_types} />
                   </p>
-                  <p className="text-blue-100 text-xs mt-1">种彩票</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">种彩票</p>
                 </div>
-                <div className="text-5xl opacity-20">🎲</div>
+                <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                  <span className="text-xl">🎲</span>
+                </div>
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-card p-6 text-white hover:shadow-lg transition-shadow">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:border-emerald-300 dark:hover:border-emerald-600 transition-colors">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-emerald-100 text-sm font-medium">开奖记录</p>
-                  <p className="text-3xl font-bold mt-2">
+                  <p className="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wide mb-1">开奖记录</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     <AnimatedNumber value={statistics.total_results} duration={1500} />
                   </p>
-                  <p className="text-emerald-100 text-xs mt-1">条数据</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">条数据</p>
                 </div>
-                <div className="text-5xl opacity-20">📊</div>
+                <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
+                  <span className="text-xl">📊</span>
+                </div>
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-gold to-gold-light rounded-lg shadow-card p-6 text-white hover:shadow-lg transition-shadow">
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:border-amber-300 dark:hover:border-amber-600 transition-colors">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-amber-100 text-sm font-medium">彩票分类</p>
-                  <p className="text-3xl font-bold mt-2">
+                  <p className="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wide mb-1">彩票分类</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     <AnimatedNumber value={statistics.lottery_type_categories} />
                   </p>
-                  <p className="text-amber-100 text-xs mt-1">个类型</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">个类型</p>
                 </div>
-                <div className="text-5xl opacity-20">🏆</div>
+                <div className="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+                  <span className="text-xl">🏆</span>
+                </div>
               </div>
             </div>
           </div>
