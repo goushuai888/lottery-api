@@ -47,7 +47,7 @@ export async function GET(request: Request) {
     const summary = {
       total_lottery_types: data?.reduce((sum, item) => sum + (item.lottery_count || 0), 0) || 0,
       total_results: data?.reduce((sum, item) => sum + (item.total_results || 0), 0) || 0,
-      lottery_type_categories: data?.length || 0,
+      lottery_type_categories: 5, // 固定5个分类：高频、低频、极速、境外、计算型
       latest_draw: latestData ? {
         time: latestData.open_date,
         lottery_code: latestData.lottery_code,
