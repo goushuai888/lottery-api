@@ -452,15 +452,9 @@ export default function Home() {
               {categorizedLotteries[activeCategory]?.lotteries?.map((lottery: LotteryType) => (
                 <div
                   key={lottery.lottery_code}
-                  onClick={() => {
-                    setSelectedLottery(lottery.lottery_code)
-                    setPage(1)
-                    setLatestIssue('')
-                    // 滚动到数据查看区域
-                    document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                  className="bg-gradient-to-br from-bg-white to-bg-light dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 cursor-pointer hover:shadow-card hover:scale-105 transition-all duration-200 border border-border-light hover:border-primary"
+                  className="group relative bg-gradient-to-br from-bg-white to-bg-light dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 cursor-pointer hover:shadow-card hover:scale-105 transition-all duration-200 border border-border-light hover:border-primary overflow-hidden"
                 >
+                  {/* 默认显示内容 */}
                   <div className="flex flex-col items-center text-center space-y-2">
                     {/* 彩票图标 */}
                     <LotteryIcon 
@@ -476,6 +470,32 @@ export default function Home() {
                     <div className="text-xs text-text-light dark:text-gray-400">
                       {lottery.lottery_code}
                     </div>
+                  </div>
+
+                  {/* 悬停时显示的操作按钮 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/95 to-primary-dark/95 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center gap-2 rounded-lg">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setSelectedLottery(lottery.lottery_code)
+                        setPage(1)
+                        setLatestIssue('')
+                        // 滚动到数据查看区域
+                        document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
+                      }}
+                      className="px-4 py-2 bg-white text-primary font-medium rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                    >
+                      历史开奖
+                    </button>
+                    <a
+                      href={`https://vip.manycai.com/Issue/history?lottername=${lottery.lottery_code}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-4 py-2 bg-white text-secondary font-medium rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                    >
+                      查看官网
+                    </a>
                   </div>
                 </div>
               ))}
