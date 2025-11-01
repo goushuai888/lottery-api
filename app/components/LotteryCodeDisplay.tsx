@@ -53,15 +53,26 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
 
   // BAAC 泰国储蓄彩票 (最复杂，优先检测)
   if (complexCode.code0 || complexCode.code_last3_1) {
-    const prizes = []
-    if (complexCode.code) prizes.push({ label: '主号', key: 'code', size: 'large' })
-    if (complexCode.code0) prizes.push({ label: '特等奖', key: 'code0', size: 'medium' })
-    for (let i = 1; i <= 8; i++) {
-      if (complexCode[`code${i}`]) prizes.push({ label: `${i}等奖`, key: `code${i}`, size: 'small' })
-    }
-    if (complexCode.code_last3) prizes.push({ label: '后3位', key: 'code_last3', size: 'tiny' })
-    if (complexCode.code_last3_1) prizes.push({ label: '后3位(副)', key: 'code_last3_1', size: 'tiny' })
-    if (complexCode.code_last4) prizes.push({ label: '后4位', key: 'code_last4', size: 'tiny' })
+    const prizes: Array<{ label: string; key: string; size: 'large' | 'medium' | 'small' | 'tiny'; isArray?: boolean }> = []
+    
+    // 主要奖项
+    if (complexCode.code) prizes.push({ label: '一等奖', key: 'code', size: 'large' })
+    if (complexCode.code0) prizes.push({ label: '帝王玉套票系列头奖', key: 'code0', size: 'medium' })
+    if (complexCode.code1) prizes.push({ label: '二等奖', key: 'code1', size: 'small', isArray: true })
+    if (complexCode.code2) prizes.push({ label: '三等奖', key: 'code2', size: 'small', isArray: true })
+    if (complexCode.code3) prizes.push({ label: '四等奖', key: 'code3', size: 'small', isArray: true })
+    if (complexCode.code4) prizes.push({ label: '五等奖', key: 'code4', size: 'tiny', isArray: true })
+    
+    // 特殊奖项
+    if (complexCode.code5) prizes.push({ label: '储蓄银行彩券礼品套装奖', key: 'code5', size: 'tiny', isArray: true })
+    if (complexCode.code6) prizes.push({ label: '储蓄银行彩券奖金钱袋套装奖', key: 'code6', size: 'tiny', isArray: true })
+    
+    // 后缀奖项
+    if (complexCode.code_last4) prizes.push({ label: '最后4位奖', key: 'code_last4', size: 'tiny' })
+    if (complexCode.code_last3) prizes.push({ label: '最后3位奖', key: 'code_last3', size: 'tiny', isArray: true })
+    if (complexCode.code_last3_1) prizes.push({ label: '奖金后3位数', key: 'code_last3_1', size: 'tiny' })
+    if (complexCode.code7) prizes.push({ label: '帝王玉套票最后4位', key: 'code7', size: 'tiny' })
+    if (complexCode.code8) prizes.push({ label: '帝王玉套票最后3位', key: 'code8', size: 'tiny' })
 
     const sizeClasses = {
       large: 'w-12 h-12 text-lg',
@@ -70,29 +81,61 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
       tiny: 'w-7 h-7 text-xs'
     }
 
+    const renderNumbers = (value: string | string[], size: string) => {
+      if (Array.isArray(value)) {
+        // 数组类型：每组号码一行
+        return value.map((group, groupIdx) => (
+          <div key={groupIdx} className="flex gap-1 justify-center flex-wrap mb-1">
+            {group.split(',').filter((n: string) => n).map((num: string, idx: number) => (
+              <span
+                key={idx}
+                className={`inline-flex items-center justify-center ${size} rounded-lg bg-gradient-to-br from-amber-500 to-yellow-500 text-white font-bold shadow-sm`}
+              >
+                {num}
+              </span>
+            ))}
+          </div>
+        ))
+      } else if (typeof value === 'string') {
+        // 字符串类型：单行显示
+        return (
+          <div className="flex gap-1 justify-center flex-wrap">
+            {value.split(',').filter((n: string) => n).map((num: string, idx: number) => (
+              <span
+                key={idx}
+                className={`inline-flex items-center justify-center ${size} rounded-lg bg-gradient-to-br from-amber-500 to-yellow-500 text-white font-bold shadow-sm`}
+              >
+                {num}
+              </span>
+            ))}
+          </div>
+        )
+      }
+      return null
+    }
+
     return (
-      <div className="space-y-2 p-3 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30 rounded-lg">
-        <div className="text-xs font-bold text-amber-700 dark:text-amber-400 mb-2 text-center">
+      <div className="space-y-3 p-4 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30 rounded-lg">
+        <div className="text-sm font-bold text-amber-700 dark:text-amber-400 mb-3 text-center border-b border-amber-300 dark:border-amber-600 pb-2">
           🇹🇭 泰国BAAC储蓄彩票
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          {prizes.map((prize) => (
-            <div key={prize.key} className="bg-white dark:bg-gray-800 rounded-md p-2">
-              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-1 text-center">
-                {prize.label}
+        <div className="space-y-2">
+          {prizes.map((prize) => {
+            const value = complexCode[prize.key]
+            if (!value) return null
+            
+            const count = Array.isArray(value) ? value.length : 1
+            const showCount = Array.isArray(value) && count > 1
+            
+            return (
+              <div key={prize.key} className="bg-white dark:bg-gray-800 rounded-md p-3 shadow-sm">
+                <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-2 text-center">
+                  {prize.label} {showCount && <span className="text-amber-500">({count}组)</span>}
+                </div>
+                {renderNumbers(value, sizeClasses[prize.size])}
               </div>
-              <div className="flex gap-1 justify-center flex-wrap">
-                {(typeof complexCode[prize.key] === 'string' ? complexCode[prize.key] : '').split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className={`inline-flex items-center justify-center ${sizeClasses[prize.size as keyof typeof sizeClasses]} rounded-lg bg-gradient-to-br from-amber-500 to-yellow-500 text-white font-bold shadow-sm`}
-                  >
-                    {num}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     )
