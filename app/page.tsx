@@ -5,6 +5,8 @@ import type { LotteryType, LotteryResult } from '@/lib/types'
 import LotteryCodeDisplay from './components/LotteryCodeDisplay'
 import VietnameseDetailsModal from './components/VietnameseDetailsModal'
 import LotteryIcon from './components/LotteryIcon'
+import AnimatedNumber from './components/AnimatedNumber'
+import LatestDraws from './components/LatestDraws'
 
 export default function Home() {
   const [lotteryTypes, setLotteryTypes] = useState<LotteryType[]>([])
@@ -64,14 +66,24 @@ export default function Home() {
 
   // 加载统计信息
   useEffect(() => {
-    fetch('/api/statistics')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setStatistics(data.summary)
-        }
-      })
-      .catch(error => console.error('加载统计信息失败:', error))
+    const fetchStatistics = () => {
+      fetch('/api/statistics')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setStatistics(data.summary)
+          }
+        })
+        .catch(error => console.error('加载统计信息失败:', error))
+    }
+
+    // 初始加载
+    fetchStatistics()
+
+    // 每30秒自动刷新统计数据
+    const interval = setInterval(fetchStatistics, 30000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   // 加载开奖记录
@@ -183,12 +195,14 @@ export default function Home() {
 
         {/* 统计面板 */}
         {statistics && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100 text-sm font-medium">彩票类型</p>
-                  <p className="text-3xl font-bold mt-2">{statistics.total_lottery_types}</p>
+                  <p className="text-3xl font-bold mt-2">
+                    <AnimatedNumber value={statistics.total_lottery_types} />
+                  </p>
                   <p className="text-blue-100 text-xs mt-1">种彩票</p>
                 </div>
                 <div className="text-5xl opacity-20">🎲</div>
@@ -199,7 +213,9 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-green-100 text-sm font-medium">开奖记录</p>
-                  <p className="text-3xl font-bold mt-2">{statistics.total_results.toLocaleString()}</p>
+                  <p className="text-3xl font-bold mt-2">
+                    <AnimatedNumber value={statistics.total_results} duration={1500} />
+                  </p>
                   <p className="text-green-100 text-xs mt-1">条数据</p>
                 </div>
                 <div className="text-5xl opacity-20">📊</div>
@@ -210,12 +226,17 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-purple-100 text-sm font-medium">彩票分类</p>
-                  <p className="text-3xl font-bold mt-2">{statistics.lottery_type_categories}</p>
+                  <p className="text-3xl font-bold mt-2">
+                    <AnimatedNumber value={statistics.lottery_type_categories} />
+                  </p>
                   <p className="text-purple-100 text-xs mt-1">个类型</p>
                 </div>
                 <div className="text-5xl opacity-20">🏆</div>
               </div>
             </div>
+            
+            {/* 最新开奖轮播 */}
+            <LatestDraws />
           </div>
         )}
 

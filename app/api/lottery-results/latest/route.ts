@@ -1,67 +1,49 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export const dynamic = 'force-dynamic'
-
-// GET /api/lottery-results/latest - 获取所有彩种的最新一期开奖记录
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const lotteryCode = searchParams.get('lottery_code')
+    const searchParams = request.nextUrl.searchParams
+    const limit = parseInt(searchParams.get('limit') || '10')
 
-    if (lotteryCode) {
-      // 获取指定彩种的最新一期
-      const { data, error } = await supabase
-        .from('lottery_results')
-        .select('*')
-        .eq('lottery_code', lotteryCode)
-        .order('open_date', { ascending: false })
-        .limit(1)
-        .single()
+    // 获取最新开奖记录（跨所有彩种）
+    const { data, error } = await supabase
+      .from('lottery_results')
+      .select(`
+        lottery_code,
+        issue,
+        open_code,
+        open_date,
+        lottery_types!inner(lottery_name)
+      `)
+      .order('open_date', { ascending: false })
+      .limit(limit)
 
-      if (error) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 500 }
-        )
-      }
+    if (error) throw error
 
-      return NextResponse.json({
-        success: true,
-        data
-      })
-    } else {
-      // 获取所有彩种的最新一期
-      const { data: allResults, error } = await supabase
-        .from('lottery_results')
-        .select('*')
-        .order('open_date', { ascending: false })
+    // 格式化数据
+    const formattedData = data?.map(item => ({
+      lottery_code: item.lottery_code,
+      lottery_name: (item.lottery_types as any)?.lottery_name || item.lottery_code,
+      issue: item.issue,
+      open_code: item.open_code,
+      open_date: item.open_date
+    })) || []
 
-      if (error) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 500 }
-        )
-      }
+    return NextResponse.json({
+      success: true,
+      data: formattedData,
+      total: formattedData.length
+    })
 
-      // 按彩种分组，取每个彩种的最新一期
-      const latestResults = new Map()
-      allResults?.forEach(result => {
-        if (!latestResults.has(result.lottery_code)) {
-          latestResults.set(result.lottery_code, result)
-        }
-      })
-
-      return NextResponse.json({
-        success: true,
-        data: Array.from(latestResults.values())
-      })
-    }
   } catch (error) {
+    console.error('获取最新开奖失败:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : '获取失败'
+      },
       { status: 500 }
     )
   }
 }
-
