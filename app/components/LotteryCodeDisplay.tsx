@@ -359,51 +359,79 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   // 带后缀号码的彩票格式（老挝VIP等）
   if (complexCode.code && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_last4 || complexCode.code_pre2 || complexCode.code_mid2)) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-3">
         {/* 主要开奖号码 */}
         {typeof complexCode.code === 'string' && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">开奖号码</span>
-            <span className="text-2xl font-bold text-primary dark:text-primary-light font-mono tracking-wider">
-              {complexCode.code.replace(/,/g, '')}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium mb-2">开奖号码</p>
+            <div className="flex gap-2">
+              {complexCode.code.replace(/,/g, '').split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 后四位 */}
         {complexCode.code_last4 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">后四位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_last4}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后四位</p>
+            <div className="flex gap-2">
+              {complexCode.code_last4.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 后三位 */}
         {complexCode.code_last3 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">后三位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_last3}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后三位</p>
+            <div className="flex gap-2">
+              {complexCode.code_last3.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 后二位 */}
         {complexCode.code_last2 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">后二位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_last2}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后二位</p>
+            <div className="flex gap-2">
+              {complexCode.code_last2.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 第2/3位 */}
         {complexCode.code_mid2 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">第2/3位</span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">第2/3位</p>
             <div className="flex gap-2">
               {complexCode.code_mid2.split('').map((num: string, idx: number) => (
                 <span
@@ -419,11 +447,18 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         
         {/* 前2位 */}
         {complexCode.code_pre2 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">前2位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_pre2}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">前2位</p>
+            <div className="flex gap-2">
+              {complexCode.code_pre2.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -433,58 +468,93 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   // ZCVIP 特殊格式
   if (complexCode.code2 && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_last4)) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-2">
           💎 ZCVIP
         </div>
         
         {/* 主号 */}
         {complexCode.code && typeof complexCode.code === 'string' && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">主号</span>
-            <span className="text-xl font-bold text-indigo-700 dark:text-indigo-300 font-mono tracking-wider">
-              {complexCode.code.replace(/,/g, '')}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">主号</p>
+            <div className="flex gap-2">
+              {complexCode.code.replace(/,/g, '').split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 text-indigo-700 dark:text-indigo-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 副号 */}
         {complexCode.code2 && typeof complexCode.code2 === 'string' && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">副号</span>
-            <span className="text-xl font-bold text-purple-700 dark:text-purple-300 font-mono tracking-wider">
-              {complexCode.code2.replace(/,/g, '')}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">副号</p>
+            <div className="flex gap-2">
+              {complexCode.code2.replace(/,/g, '').split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 text-purple-700 dark:text-purple-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 后四位 */}
         {complexCode.code_last4 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">后四位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_last4}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后四位</p>
+            <div className="flex gap-2">
+              {complexCode.code_last4.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 后三位 */}
         {complexCode.code_last3 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">后三位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_last3}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后三位</p>
+            <div className="flex gap-2">
+              {complexCode.code_last3.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
         {/* 后二位 */}
         {complexCode.code_last2 && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">后二位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_last2}
-            </span>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后二位</p>
+            <div className="flex gap-2">
+              {complexCode.code_last2.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
       </div>
