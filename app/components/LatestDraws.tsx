@@ -7,7 +7,7 @@ interface LatestDraw {
   lottery_code: string
   lottery_name: string
   issue: string
-  open_code: string
+  code: string
   open_date: string
 }
 
@@ -97,7 +97,7 @@ export default function LatestDraws() {
 
           <div className="flex items-center gap-2 bg-white/10 rounded-lg p-3">
             <LotteryCodeDisplay 
-              code={currentDraw.open_code}
+              code={currentDraw.code}
               lotteryCode={currentDraw.lottery_code}
             />
           </div>
