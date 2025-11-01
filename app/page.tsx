@@ -220,8 +220,6 @@ export default function Home() {
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
               彩票开奖数据
             </span>
-            <br />
-            <span className="text-gray-800 dark:text-gray-100">API 平台</span>
           </h1>
           
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
