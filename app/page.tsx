@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import type { LotteryType, LotteryResult } from '@/lib/types'
 import LotteryCodeDisplay from './components/LotteryCodeDisplay'
 import VietnameseDetailsModal from './components/VietnameseDetailsModal'
+import BaacDetailsModal from './components/BaacDetailsModal'
 import LotteryIcon from './components/LotteryIcon'
 import AnimatedNumber from './components/AnimatedNumber'
 
@@ -33,6 +34,10 @@ export default function Home() {
   // 越南传统彩票详情模态框
   const [modalOpen, setModalOpen] = useState(false)
   const [modalData, setModalData] = useState<{code: any, issue: string} | null>(null)
+  
+  // BAAC彩票详情模态框
+  const [baacModalOpen, setBaacModalOpen] = useState(false)
+  const [baacModalData, setBaacModalData] = useState<{code: any, issue: string} | null>(null)
   
   // 彩票分类相关状态
   const [activeCategory, setActiveCategory] = useState<string>('high_frequency')
@@ -623,6 +628,7 @@ export default function Home() {
                                 {new Date(result.open_date).toLocaleString('zh-CN')}
                               </td>
                               <td className="px-6 py-4 text-center">
+                                {/* 越南传统彩票详情按钮 */}
                                 {isVietnameseLottery && (
                                   <button
                                     onClick={() => {
@@ -630,6 +636,22 @@ export default function Home() {
                                       setModalOpen(true)
                                     }}
                                     className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-lg shadow-sm transition-colors duration-200 inline-flex items-center gap-1"
+                                  >
+                                    <span>查看详情</span>
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                  </button>
+                                )}
+                                
+                                {/* BAAC彩票详情按钮 */}
+                                {result.lottery_code === 'BAAC' && (
+                                  <button
+                                    onClick={() => {
+                                      setBaacModalData({code: result.code, issue: result.issue})
+                                      setBaacModalOpen(true)
+                                    }}
+                                    className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-medium rounded-lg shadow-sm transition-colors duration-200 inline-flex items-center gap-1"
                                   >
                                     <span>查看详情</span>
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -698,6 +720,16 @@ export default function Home() {
           onClose={() => setModalOpen(false)}
           code={modalData.code}
           issue={modalData.issue}
+        />
+      )}
+      
+      {/* BAAC彩票详情模态框 */}
+      {baacModalOpen && baacModalData && (
+        <BaacDetailsModal 
+          isOpen={baacModalOpen}
+          onClose={() => setBaacModalOpen(false)}
+          code={baacModalData.code}
+          issue={baacModalData.issue}
         />
       )}
     </div>
