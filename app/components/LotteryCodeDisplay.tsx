@@ -358,6 +358,10 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
 
   // 带后缀号码的彩票格式（老挝VIP等）
   if (complexCode.code && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_last4 || complexCode.code_pre2 || complexCode.code_mid2)) {
+    // 获取完整号码用于提取第2/3位
+    const fullCode = typeof complexCode.code === 'string' ? complexCode.code.replace(/,/g, '') : ''
+    const mid2Digits = fullCode.length >= 3 ? fullCode[1] + fullCode[2] : null // 提取第2和第3位
+    
     return (
       <div className="space-y-3">
         {/* 主要开奖号码 */}
@@ -428,12 +432,12 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           </div>
         )}
         
-        {/* 第2/3位 */}
-        {complexCode.code_mid2 && (
+        {/* 第2/3位 - 优先使用code_mid2，如果没有则从主号码提取 */}
+        {(complexCode.code_mid2 || mid2Digits) && (
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">第2/3位</p>
             <div className="flex gap-2">
-              {complexCode.code_mid2.split('').map((num: string, idx: number) => (
+              {(complexCode.code_mid2 || mid2Digits || '').split('').map((num: string, idx: number) => (
                 <span
                   key={idx}
                   className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
