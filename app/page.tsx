@@ -500,10 +500,16 @@ export default function Home() {
                       </thead>
                       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {results.map((result, index) => {
-                          // 判断是否为越南传统彩票（检查 code 是否有 code1 属性）
-                          const isVietnameseLottery = typeof result.code === 'object' && 
-                            result.code !== null && 
-                            'code1' in result.code
+                          // 越南传统彩票代码列表
+                          const VIETNAMESE_LOTTERY_CODES = [
+                            'HNC', 'BNC', 'HFC', 'NDC', 'GNIC', 'TPC', 'PDC', 'XXC', 'DOLC', 'DNC',
+                            'JLC', 'QHC', 'KGC', 'LSC', 'GPC', 'GNC', 'GYC', 'GZC', 'FAC', 'SFC',
+                            'FZMSC', 'AJC', 'BLC', 'BZC', 'PYC', 'PFC', 'PSC', 'JOC', 'JYC', 'DLC',
+                            'TNC', 'TTC', 'HJC', 'JJC', 'LAC', 'SZC', 'XLC', 'QJC', 'CRC', 'YLC', 'TDC'
+                          ]
+                          
+                          // 判断是否为越南传统彩票
+                          const isVietnameseLottery = VIETNAMESE_LOTTERY_CODES.includes(result.lottery_code)
                           
                           return (
                             <tr 
