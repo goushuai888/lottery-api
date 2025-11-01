@@ -345,10 +345,7 @@ export default function LotteryIcon({ lotteryCode, lotteryName, size = 'md' }: L
   // 优先使用 Supabase 存储的图片
   if (imageUrl) {
     const fileExt = imageUrl.endsWith('.jpg') ? '.jpg' : '.png'
-    // 使用环境变量配置的存储域名，支持自定义域名
-    const storageBaseUrl = process.env.NEXT_PUBLIC_STORAGE_URL || 
-                          'https://ixqsqmftydqsibrjkuyc.supabase.co/storage/v1/object/public'
-    const supabaseImageUrl = `${storageBaseUrl}/lottery-logos/${lotteryCode}${fileExt}`
+    const supabaseImageUrl = `https://ixqsqmftydqsibrjkuyc.supabase.co/storage/v1/object/public/lottery-logos/${lotteryCode}${fileExt}`
     
     return (
       <div className={`${sizeClasses[size]} relative rounded-full overflow-hidden shadow-md ring-2 ring-white dark:ring-gray-700`}>
