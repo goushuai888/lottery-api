@@ -40,10 +40,9 @@ export default function Home() {
   const [baacModalOpen, setBaacModalOpen] = useState(false)
   const [baacModalData, setBaacModalData] = useState<{code: any, issue: string} | null>(null)
   
-  // 彩票分类相关状态
-  const [activeCategory, setActiveCategory] = useState<string>('high_frequency')
-  const [categorizedLotteries, setCategorizedLotteries] = useState<Record<string, any>>({})
-  const [overseasSubcategory, setOverseasSubcategory] = useState<string>('all') // 境外彩种子分类
+  // 彩票分类相关状态（改为按国家分类）
+  const [activeCountry, setActiveCountry] = useState<string>('all') // all, vietnam, thailand, indonesia, canada, other
+  const [groupedLotteries, setGroupedLotteries] = useState<Record<string, any>>({})
   const [categoryLoading, setCategoryLoading] = useState(true)
 
   // 加载彩种列表
@@ -57,51 +56,30 @@ export default function Home() {
       })
   }, [])
 
-  // 加载分类彩种
+  // 加载按国家分组的彩种
   useEffect(() => {
     setCategoryLoading(true)
-    
-    // 如果是境外彩种且选择了非"全部"的子分类，则加载子分类数据
-    if (activeCategory === 'overseas' && overseasSubcategory !== 'all') {
-      fetch(`/api/lottery-types/overseas-subcategories?subcategory=${overseasSubcategory}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            // 更新境外彩种的数据
-            setCategorizedLotteries(prev => ({
-              ...prev,
-              overseas: {
-                name: '境外彩种',
-                lotteries: data.data
-              }
-            }))
-          }
-        })
-        .finally(() => setCategoryLoading(false))
-    } else {
-      // 加载所有分类
-      fetch('/api/lottery-types/by-category')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            setCategorizedLotteries(data.data)
-          }
-        })
-        .finally(() => setCategoryLoading(false))
-    }
-  }, [activeCategory, overseasSubcategory])
+    fetch(`/api/lottery-types/grouped-by-country?country=${activeCountry}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setGroupedLotteries(data.data)
+        }
+      })
+      .finally(() => setCategoryLoading(false))
+  }, [activeCountry])
 
   // 加载统计信息
   useEffect(() => {
     const fetchStatistics = () => {
-      fetch('/api/statistics')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            setStatistics(data.summary)
-          }
-        })
-        .catch(error => console.error('加载统计信息失败:', error))
+    fetch('/api/statistics')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setStatistics(data.summary)
+        }
+      })
+      .catch(error => console.error('加载统计信息失败:', error))
     }
 
     // 初始加载
@@ -307,187 +285,176 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 彩票分类浏览 */}
+        {/* 彩票分类浏览 - 参考采集源网站样式 */}
         <div className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 mb-8 border border-border-light">
           <h2 className="text-2xl font-bold mb-6 text-text-dark dark:text-white">
             🎲 彩票分类
           </h2>
 
-          {/* 分类标签 */}
-          <div className="flex flex-wrap gap-3 mb-6 border-b border-border-divider dark:border-gray-700 pb-4">
+          {/* 国家分类导航 - 参考采集源网站 */}
+          <div className="flex flex-wrap gap-2 mb-6 pb-4 border-b border-border-divider dark:border-gray-700">
             <button
-              onClick={() => setActiveCategory('high_frequency')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
-                activeCategory === 'high_frequency'
+              onClick={() => setActiveCountry('all')}
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                activeCountry === 'all'
                   ? 'bg-primary text-white shadow-card'
                   : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
               }`}
             >
-              <span className="mr-2">⚡</span>
-              高频彩种
+              全部
             </button>
             <button
-              onClick={() => setActiveCategory('low_frequency')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
-                activeCategory === 'low_frequency'
+              onClick={() => setActiveCountry('vietnam')}
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                activeCountry === 'vietnam'
                   ? 'bg-primary text-white shadow-card'
                   : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
               }`}
             >
-              <span className="mr-2">🎯</span>
-              低频彩种
+              越南
             </button>
             <button
-              onClick={() => setActiveCategory('super_speed')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
-                activeCategory === 'super_speed'
+              onClick={() => setActiveCountry('thailand')}
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                activeCountry === 'thailand'
                   ? 'bg-primary text-white shadow-card'
                   : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
               }`}
             >
-              <span className="mr-2">🚀</span>
-              极速彩种
+              泰国
             </button>
             <button
-              onClick={() => {
-                setActiveCategory('overseas')
-                setOverseasSubcategory('all')
-              }}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
-                activeCategory === 'overseas'
+              onClick={() => setActiveCountry('indonesia')}
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                activeCountry === 'indonesia'
                   ? 'bg-primary text-white shadow-card'
                   : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
               }`}
             >
-              <span className="mr-2">🌏</span>
-              境外彩种
+              印尼
             </button>
             <button
-              onClick={() => setActiveCategory('calculated')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
-                activeCategory === 'calculated'
+              onClick={() => setActiveCountry('canada')}
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                activeCountry === 'canada'
                   ? 'bg-primary text-white shadow-card'
                   : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
               }`}
             >
-              <span className="mr-2">💻</span>
-              计算型彩种
+              加拿大
+            </button>
+            <button
+              onClick={() => setActiveCountry('other')}
+              className={`px-5 py-2 rounded-md text-sm font-medium transition-all ${
+                activeCountry === 'other'
+                  ? 'bg-primary text-white shadow-card'
+                  : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
+              }`}
+            >
+              其他
             </button>
           </div>
 
-          {/* 境外彩种子分类 */}
-          {activeCategory === 'overseas' && (
-            <div className="flex flex-wrap gap-2 mt-4 p-4 bg-bg-light dark:bg-gray-700/50 rounded-md">
-              <button
-                onClick={() => setOverseasSubcategory('all')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  overseasSubcategory === 'all'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
-                }`}
-              >
-                全部
-              </button>
-              <button
-                onClick={() => setOverseasSubcategory('vietnam')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  overseasSubcategory === 'vietnam'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
-                }`}
-              >
-                🇻🇳 越南
-              </button>
-              <button
-                onClick={() => setOverseasSubcategory('thailand')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  overseasSubcategory === 'thailand'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
-                }`}
-              >
-                🇹🇭 泰国
-              </button>
-              <button
-                onClick={() => setOverseasSubcategory('indonesia')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  overseasSubcategory === 'indonesia'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
-                }`}
-              >
-                🇮🇩 印尼
-              </button>
-              <button
-                onClick={() => setOverseasSubcategory('canada')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  overseasSubcategory === 'canada'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
-                }`}
-              >
-                🇨🇦 加拿大
-              </button>
-              <button
-                onClick={() => setOverseasSubcategory('other')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  overseasSubcategory === 'other'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
-                }`}
-              >
-                🌍 其他
-              </button>
-            </div>
-          )}
-
-          {/* 彩票列表 */}
+          {/* 彩票列表 - 按子分类分组显示 */}
           {categoryLoading ? (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
               <p className="mt-4 text-text-muted dark:text-gray-400">加载中...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {categorizedLotteries[activeCategory]?.lotteries?.map((lottery: LotteryType) => (
-                <div
-                  key={lottery.lottery_code}
-                  onClick={() => {
-                    setSelectedLottery(lottery.lottery_code)
-                    setPage(1)
-                    setLatestIssue('')
-                    // 滚动到数据查看区域
-                    document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                  className="bg-gradient-to-br from-bg-white to-bg-light dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 cursor-pointer hover:shadow-card hover:scale-105 transition-all duration-200 border border-border-light hover:border-primary"
-                >
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    {/* 彩票图标 */}
-                    <LotteryIcon 
-                      lotteryCode={lottery.lottery_code}
-                      lotteryName={lottery.lottery_name}
-                      size="md"
-                    />
-                    {/* 彩票名称 */}
-                    <div className="text-sm font-medium text-text-dark dark:text-white break-words w-full">
-                      {lottery.lottery_name}
-                    </div>
-                    {/* 彩票代码 */}
-                    <div className="text-xs text-text-light dark:text-gray-400">
-                      {lottery.lottery_code}
+            <div className="space-y-8" style={{ paddingTop: '20px' }}>
+              {activeCountry === 'all' ? (
+                // 显示所有国家分组
+                Object.entries(groupedLotteries).map(([countryKey, countryData]: [string, any]) => (
+                  <div key={countryKey} className="space-y-4">
+                    <h3 className="text-lg font-bold text-text-dark dark:text-white border-b border-border-divider dark:border-gray-700 pb-2">
+                      {countryData.name}
+                    </h3>
+                    {Object.entries(countryData.subcategories || {}).map(([subKey, subData]: [string, any]) => (
+                      <div key={subKey} className="space-y-3">
+                        <h4 className="text-md font-semibold text-text-secondary dark:text-gray-300">
+                          {subData.name}
+                        </h4>
+                        <div className="flex flex-wrap gap-3">
+                          {subData.lotteries?.map((lottery: LotteryType) => (
+                            <div
+                              key={lottery.lottery_code}
+                              className="flex items-center gap-2 bg-bg-light dark:bg-gray-700/50 rounded-md px-4 py-2 hover:bg-border-light dark:hover:bg-gray-600 transition-colors"
+                            >
+                              <span className="text-sm font-medium text-text-dark dark:text-white">
+                                {lottery.lottery_name}
+                              </span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setSelectedLottery(lottery.lottery_code)
+                                  setPage(1)
+                                  setLatestIssue('')
+                                  document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
+                                }}
+                                className="px-3 py-1 text-xs bg-primary hover:bg-primary-dark text-white rounded-md transition-colors"
+                              >
+                                历史开奖
+                              </button>
+                              <a
+                                href={`https://vip.manycai.com/Issue/history?lottername=${lottery.lottery_code}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1 text-xs bg-secondary hover:bg-secondary-dark text-white rounded-md transition-colors"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                查看官网
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                // 显示单个国家的分组
+                Object.entries(groupedLotteries).map(([subKey, subData]: [string, any]) => (
+                  <div key={subKey} className="space-y-3">
+                    <h4 className="text-md font-semibold text-text-secondary dark:text-gray-300">
+                      {subData.name}
+                    </h4>
+                    <div className="flex flex-wrap gap-3">
+                      {subData.lotteries?.map((lottery: LotteryType) => (
+                        <div
+                          key={lottery.lottery_code}
+                          className="flex items-center gap-2 bg-bg-light dark:bg-gray-700/50 rounded-md px-4 py-2 hover:bg-border-light dark:hover:bg-gray-600 transition-colors"
+                        >
+                          <span className="text-sm font-medium text-text-dark dark:text-white">
+                            {lottery.lottery_name}
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setSelectedLottery(lottery.lottery_code)
+                              setPage(1)
+                              setLatestIssue('')
+                              document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
+                            }}
+                            className="px-3 py-1 text-xs bg-primary hover:bg-primary-dark text-white rounded-md transition-colors"
+                          >
+                            历史开奖
+                          </button>
+                          <a
+                            href={`https://vip.manycai.com/Issue/history?lottername=${lottery.lottery_code}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1 text-xs bg-secondary hover:bg-secondary-dark text-white rounded-md transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            查看官网
+                          </a>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* 分类统计 */}
-          {!categoryLoading && categorizedLotteries[activeCategory] && (
-            <div className="mt-6 pt-6 border-t border-border-divider dark:border-gray-700 text-center text-sm text-text-muted dark:text-gray-400">
-              当前分类共有 <span className="font-bold text-primary dark:text-primary-light">
-                {categorizedLotteries[activeCategory]?.lotteries?.length || 0}
-              </span> 种彩票
+                ))
+              )}
             </div>
           )}
         </div>
@@ -507,7 +474,7 @@ export default function Home() {
                   <div>
                     <h2 className="text-2xl font-bold text-text-dark dark:text-white">
                       {lotteryTypes.find(t => t.lottery_code === selectedLottery)?.lottery_name || selectedLottery}
-                    </h2>
+          </h2>
                     <p className="text-sm text-text-light dark:text-gray-400">
                       彩种代码: {selectedLottery}
                     </p>
@@ -565,9 +532,9 @@ export default function Home() {
                     返回分类
                   </button>
                 </div>
-              </div>
+          </div>
 
-              {/* 开奖记录表格 */}
+          {/* 开奖记录表格 */}
               {loading ? (
                 <div className="text-center py-12">
                   <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>

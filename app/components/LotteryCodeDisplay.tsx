@@ -120,20 +120,20 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         {/* 显示帝王玉套票系列头奖 */}
         {complexCode.code0 && typeof complexCode.code0 === 'string' && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2">
-            <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-1 text-center">
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 mb-1 text-center">
               帝王玉套票系列头奖
-            </div>
-            <div className="flex gap-1 justify-center flex-wrap">
+              </div>
+              <div className="flex gap-1 justify-center flex-wrap">
               {complexCode.code0.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                <span
-                  key={idx}
+                  <span
+                    key={idx}
                   className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-500 text-white font-bold text-base shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
+                  >
+                    {num}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
         )}
         
         {/* 显示一等奖 */}
