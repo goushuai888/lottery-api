@@ -100,19 +100,19 @@ export default function SuffixLotteryDetailsModal({ isOpen, onClose, code, issue
           {!isZCVIP && renderNumberRow(code.code?.replace(/,/g, ''), '开奖号码', 'bg-gradient-to-br from-teal-500 to-cyan-500')}
           
           {/* 后四位 */}
-          {renderNumberRow(code.code_last4, '后四位', 'bg-gradient-to-br from-blue-500 to-blue-600')}
+          {renderNumberRow(code.code_last4?.replace(/,/g, ''), '后四位', 'bg-gradient-to-br from-blue-500 to-blue-600')}
           
           {/* 后三位 */}
-          {renderNumberRow(code.code_last3, '后三位', 'bg-gradient-to-br from-blue-400 to-blue-500')}
+          {renderNumberRow(code.code_last3?.replace(/,/g, ''), '后三位', 'bg-gradient-to-br from-blue-400 to-blue-500')}
           
           {/* 后二位 */}
-          {renderNumberRow(code.code_last2, '后二位', 'bg-gradient-to-br from-blue-300 to-blue-400')}
+          {renderNumberRow(code.code_last2?.replace(/,/g, ''), '后二位', 'bg-gradient-to-br from-blue-300 to-blue-400')}
           
           {/* 第2/3位 */}
-          {renderNumberRow(code.code_mid2 || mid2Digits, '第2/3位', 'bg-gradient-to-br from-cyan-500 to-teal-500')}
+          {renderNumberRow((code.code_mid2 || mid2Digits)?.replace(/,/g, ''), '第2/3位', 'bg-gradient-to-br from-cyan-500 to-teal-500')}
           
           {/* 前2位 */}
-          {renderNumberRow(code.code_pre2, '前2位', 'bg-gradient-to-br from-teal-400 to-green-400')}
+          {renderNumberRow(code.code_pre2?.replace(/,/g, ''), '前2位', 'bg-gradient-to-br from-teal-400 to-green-400')}
         </div>
 
         {/* 底部关闭按钮 */}
