@@ -264,49 +264,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* 核心特性 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <div className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 hover:shadow-lg hover:border-primary transition-all border border-border-light">
-            <div className="text-4xl mb-4">⚡</div>
-            <h3 className="text-lg font-bold text-text-dark dark:text-white mb-2">
-              实时更新
-            </h3>
-            <p className="text-text-muted dark:text-gray-300 text-sm">
-              每分钟自动采集，数据实时同步，确保最新开奖信息
-            </p>
-          </div>
-
-          <div className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 hover:shadow-lg hover:border-primary transition-all border border-border-light">
-            <div className="text-4xl mb-4">🔓</div>
-            <h3 className="text-lg font-bold text-text-dark dark:text-white mb-2">
-              完全免费
-            </h3>
-            <p className="text-text-muted dark:text-gray-300 text-sm">
-              无需注册，无需 API Key，无访问限制，完全开放使用
-            </p>
-          </div>
-
-          <div className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 hover:shadow-lg hover:border-primary transition-all border border-border-light">
-            <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-lg font-bold text-text-dark dark:text-white mb-2">
-              数据完整
-            </h3>
-            <p className="text-text-muted dark:text-gray-300 text-sm">
-              179 个彩种全覆盖，智能补齐历史数据，零丢失
-            </p>
-          </div>
-
-          <div className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 hover:shadow-lg hover:border-primary transition-all border border-border-light">
-            <div className="text-4xl mb-4">🚀</div>
-            <h3 className="text-lg font-bold text-text-dark dark:text-white mb-2">
-              高性能
-            </h3>
-            <p className="text-text-muted dark:text-gray-300 text-sm">
-              数据库 S 级优化，并发处理，响应速度快至毫秒级
-            </p>
-          </div>
-        </div>
-
         {/* 彩票分类浏览 */}
         <div className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 mb-8 border border-border-light">
           <h2 className="text-2xl font-bold mb-6 text-text-dark dark:text-white">
