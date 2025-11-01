@@ -397,17 +397,26 @@ export default function Home() {
 
         {/* 数据查看 */}
         <div id="data-view" className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
-            📊 开奖数据查看
-          </h2>
-          
-          {/* 彩种选择 */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                选择彩种
-              </label>
-              {selectedLottery && (
+          {selectedLottery ? (
+            <>
+              {/* 当前彩种标题 */}
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-3">
+                  <LotteryIcon 
+                    lotteryCode={selectedLottery}
+                    lotteryName={lotteryTypes.find(t => t.lottery_code === selectedLottery)?.lottery_name || selectedLottery}
+                    size="md"
+                  />
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                      {lotteryTypes.find(t => t.lottery_code === selectedLottery)?.lottery_name || selectedLottery}
+                    </h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      彩种代码: {selectedLottery}
+                    </p>
+                  </div>
+                </div>
+                
                 <div className="flex items-center gap-3">
                   {/* 自动刷新状态 */}
                   {autoRefresh && lastCheckTime && (
@@ -439,36 +448,30 @@ export default function Home() {
                     <span className="text-sm text-gray-600 dark:text-gray-400">
                       {autoRefresh ? (
                         <span className="flex items-center gap-1">
-                          <span className="text-green-600">✓</span> 智能刷新 (10秒)
+                          <span className="text-green-600">✓</span> 智能刷新
                         </span>
                       ) : (
                         '🔄 自动刷新'
                       )}
                     </span>
                   </label>
+                  
+                  {/* 返回按钮 */}
+                  <button
+                    onClick={() => {
+                      setSelectedLottery('')
+                      setResults([])
+                      setPage(1)
+                    }}
+                    className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    返回分类
+                  </button>
                 </div>
-              )}
-            </div>
-            <select
-              value={selectedLottery}
-              onChange={(e) => {
-                setSelectedLottery(e.target.value)
-                setPage(1)
-                setLatestIssue('')
-              }}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-            >
-              <option value="">请选择彩种</option>
-              {lotteryTypes.map(type => (
-                <option key={type.lottery_code} value={type.lottery_code}>
-                  {type.lottery_name} ({type.lottery_code})
-                </option>
-              ))}
-            </select>
-          </div>
+              </div>
 
-          {/* 开奖记录表格 */}
-          {selectedLottery && (
+              {/* 开奖记录表格 */}
+              {(
             <>
               {loading ? (
                 <div className="text-center py-12">
@@ -574,6 +577,16 @@ export default function Home() {
                 </div>
               )}
             </>
+          ) : (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">🎲</div>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                请从上方分类中选择彩种
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                点击任意彩票图标即可查看开奖记录
+              </p>
+            </div>
           )}
         </div>
 
