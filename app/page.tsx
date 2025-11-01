@@ -496,14 +496,22 @@ export default function Home() {
                         </tr>
                       </thead>
                       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {results.map((result) => {
+                        {results.map((result, index) => {
                           // 判断是否为越南传统彩票（检查 code 是否有 code1 属性）
                           const isVietnameseLottery = typeof result.code === 'object' && 
                             result.code !== null && 
                             'code1' in result.code
                           
                           return (
-                            <tr key={result.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <tr 
+                              key={result.id} 
+                              className="hover:bg-gray-50 dark:hover:bg-gray-700 animate-flip-in"
+                              style={{ 
+                                animationDelay: `${index * 0.1}s`,
+                                opacity: 0,
+                                animationFillMode: 'forwards'
+                              }}
+                            >
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                 {result.issue}
                               </td>
