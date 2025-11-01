@@ -199,78 +199,113 @@ export default function Home() {
   }, [selectedLottery, page, latestIssue, autoRefresh])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
-        {/* Hero 区域 - 简约现代风格 */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-3">
-            彩票开奖数据 API 平台
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800 relative overflow-hidden">
+      {/* 装饰性背景元素 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-indigo-400/10 to-pink-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-300/5 to-indigo-300/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        {/* Hero 区域 - 专业现代风格 */}
+        <div className="text-center mb-16 animate-fadeIn">
+          {/* 徽章 */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20 rounded-full border border-blue-200/50 dark:border-blue-700/50 mb-6">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">实时数据 · 100% 免费</span>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+              彩票开奖数据
+            </span>
+            <br />
+            <span className="text-gray-800 dark:text-gray-100">API 平台</span>
           </h1>
-          <p className="text-base text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-            专业的彩票开奖数据服务 · 179 个彩种 · 实时更新 · 完全免费
+          
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+            专业的彩票开奖数据服务 · <span className="font-semibold text-blue-600 dark:text-blue-400">179</span> 个彩种 · 实时更新 · 完全免费
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <a
               href="/api-docs"
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-lg transition-colors"
+              className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 transform"
             >
-              <span>📖</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
               <span>查看 API 文档</span>
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </a>
             <a
               href="#data-view"
-              className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-white font-medium px-6 py-2.5 rounded-lg transition-colors border border-gray-200 dark:border-gray-700"
+              className="group inline-flex items-center gap-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:scale-105 transform shadow-md hover:shadow-lg"
             >
-              <span>📊</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
               <span>查看开奖数据</span>
             </a>
           </div>
         </div>
 
-        {/* 统计面板 - 简约现代风格 */}
+        {/* 统计面板 - 专业精美风格 */}
         {statistics && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wide mb-1">彩票类型</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 overflow-hidden">
+              {/* 渐变背景 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-900/10 dark:to-indigo-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              <div className="relative flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">彩票类型</p>
+                  <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-1">
                     <AnimatedNumber value={statistics.total_lottery_types} />
                   </p>
-                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">种彩票</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-sm">种彩票</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                  <span className="text-xl">🎲</span>
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">🎲</span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:border-emerald-300 dark:hover:border-emerald-600 transition-colors">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wide mb-1">开奖记录</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 overflow-hidden">
+              {/* 渐变背景 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/10 dark:to-teal-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              <div className="relative flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">开奖记录</p>
+                  <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-1">
                     <AnimatedNumber value={statistics.total_results} duration={1500} />
                   </p>
-                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">条数据</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-sm">条数据</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
-                  <span className="text-xl">📊</span>
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">📊</span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:border-amber-300 dark:hover:border-amber-600 transition-colors">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wide mb-1">彩票分类</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:border-amber-300 dark:hover:border-amber-600 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 overflow-hidden">
+              {/* 渐变背景 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-900/10 dark:to-orange-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              <div className="relative flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">彩票分类</p>
+                  <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent mb-1">
                     <AnimatedNumber value={statistics.lottery_type_categories} />
                   </p>
-                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">个类型</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-sm">个类型</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
-                  <span className="text-xl">🏆</span>
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 dark:from-amber-600 dark:to-orange-700 flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-2xl">🏆</span>
                 </div>
               </div>
             </div>
@@ -278,19 +313,27 @@ export default function Home() {
         )}
 
         {/* 彩票分类浏览 */}
-        <div className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 mb-8 border border-border-light">
-          <h2 className="text-2xl font-bold mb-6 text-text-dark dark:text-white">
-            🎲 彩票分类
-          </h2>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 p-8 mb-10 border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <span className="text-2xl">🎲</span>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                彩票分类
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">浏览所有可用的彩票类型</p>
+            </div>
+          </div>
 
           {/* 分类标签 */}
-          <div className="flex flex-wrap gap-3 mb-6 border-b border-border-divider dark:border-gray-700 pb-4">
+          <div className="flex flex-wrap gap-3 mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
             <button
               onClick={() => setActiveCategory('high_frequency')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeCategory === 'high_frequency'
-                  ? 'bg-primary text-white shadow-card'
-                  : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:scale-105'
               }`}
             >
               <span className="mr-2">⚡</span>
@@ -298,10 +341,10 @@ export default function Home() {
             </button>
             <button
               onClick={() => setActiveCategory('low_frequency')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeCategory === 'low_frequency'
-                  ? 'bg-primary text-white shadow-card'
-                  : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:scale-105'
               }`}
             >
               <span className="mr-2">🎯</span>
@@ -309,10 +352,10 @@ export default function Home() {
             </button>
             <button
               onClick={() => setActiveCategory('super_speed')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeCategory === 'super_speed'
-                  ? 'bg-primary text-white shadow-card'
-                  : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:scale-105'
               }`}
             >
               <span className="mr-2">🚀</span>
@@ -323,10 +366,10 @@ export default function Home() {
                 setActiveCategory('overseas')
                 setOverseasSubcategory('all')
               }}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeCategory === 'overseas'
-                  ? 'bg-primary text-white shadow-card'
-                  : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:scale-105'
               }`}
             >
               <span className="mr-2">🌏</span>
@@ -334,10 +377,10 @@ export default function Home() {
             </button>
             <button
               onClick={() => setActiveCategory('calculated')}
-              className={`px-6 py-2.5 rounded-md font-medium transition-all ${
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeCategory === 'calculated'
-                  ? 'bg-primary text-white shadow-card'
-                  : 'bg-bg-light dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600'
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:scale-105'
               }`}
             >
               <span className="mr-2">💻</span>
@@ -347,63 +390,63 @@ export default function Home() {
 
           {/* 境外彩种子分类 */}
           {activeCategory === 'overseas' && (
-            <div className="flex flex-wrap gap-2 mt-4 p-4 bg-bg-light dark:bg-gray-700/50 rounded-md">
+            <div className="flex flex-wrap gap-2 mt-4 p-5 bg-gradient-to-r from-gray-50 to-blue-50/50 dark:from-gray-700/50 dark:to-blue-900/20 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
               <button
                 onClick={() => setOverseasSubcategory('all')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                   overseasSubcategory === 'all'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 scale-105'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 hover:scale-105'
                 }`}
               >
                 全部
               </button>
               <button
                 onClick={() => setOverseasSubcategory('vietnam')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                   overseasSubcategory === 'vietnam'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 scale-105'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 hover:scale-105'
                 }`}
               >
                 🇻🇳 越南
               </button>
               <button
                 onClick={() => setOverseasSubcategory('thailand')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                   overseasSubcategory === 'thailand'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 scale-105'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 hover:scale-105'
                 }`}
               >
                 🇹🇭 泰国
               </button>
               <button
                 onClick={() => setOverseasSubcategory('indonesia')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                   overseasSubcategory === 'indonesia'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 scale-105'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 hover:scale-105'
                 }`}
               >
                 🇮🇩 印尼
               </button>
               <button
                 onClick={() => setOverseasSubcategory('canada')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                   overseasSubcategory === 'canada'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 scale-105'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 hover:scale-105'
                 }`}
               >
                 🇨🇦 加拿大
               </button>
               <button
                 onClick={() => setOverseasSubcategory('other')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                   overseasSubcategory === 'other'
-                    ? 'bg-primary text-white shadow-card'
-                    : 'bg-bg-white dark:bg-gray-700 text-text-secondary dark:text-gray-300 hover:bg-border-light dark:hover:bg-gray-600 border border-border'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 scale-105'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 hover:scale-105'
                 }`}
               >
                 🌍 其他
@@ -422,7 +465,7 @@ export default function Home() {
               {categorizedLotteries[activeCategory]?.lotteries?.map((lottery: LotteryType) => (
                 <div
                   key={lottery.lottery_code}
-                  className="bg-gradient-to-br from-bg-white to-bg-light dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 hover:shadow-card transition-all duration-200 border border-border-light hover:border-primary"
+                  className="group bg-white dark:bg-gray-800 rounded-xl p-5 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-600 hover:-translate-y-1"
                 >
                   {/* 彩票图标和名称 */}
                   <div className="flex flex-col items-center text-center space-y-3 mb-3">
@@ -439,7 +482,7 @@ export default function Home() {
                   </div>
 
                   {/* 操作按钮 - 始终显示 */}
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 mt-3">
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -449,7 +492,7 @@ export default function Home() {
                         // 滚动到数据查看区域
                         document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
                       }}
-                      className="w-full px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded transition-colors duration-200"
+                      className="w-full px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-lg transition-all duration-300 shadow-md shadow-blue-500/30 hover:shadow-lg hover:shadow-blue-500/40 hover:scale-105"
                     >
                       历史开奖
                     </button>
@@ -458,7 +501,7 @@ export default function Home() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="w-full px-3 py-1.5 bg-white dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-500 text-text-dark dark:text-white text-xs font-medium rounded transition-colors duration-200 text-center border border-border dark:border-gray-500"
+                      className="w-full px-3 py-2 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-white text-xs font-semibold rounded-lg transition-all duration-300 text-center border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:scale-105"
                     >
                       查看官网
                     </a>
@@ -470,20 +513,22 @@ export default function Home() {
 
           {/* 分类统计 */}
           {!categoryLoading && categorizedLotteries[activeCategory] && (
-            <div className="mt-6 pt-6 border-t border-border-divider dark:border-gray-700 text-center text-sm text-text-muted dark:text-gray-400">
-              当前分类共有 <span className="font-bold text-primary dark:text-primary-light">
-                {categorizedLotteries[activeCategory]?.lotteries?.length || 0}
-              </span> 种彩票
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                当前分类共有 <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                  {categorizedLotteries[activeCategory]?.lotteries?.length || 0}
+                </span> 种彩票
+              </p>
             </div>
           )}
         </div>
 
         {/* 数据查看 */}
-        <div id="data-view" className="bg-bg-white dark:bg-gray-800 rounded-lg shadow-card p-6 border border-border-light">
+        <div id="data-view" className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-gray-900/50 p-8 border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm">
           {selectedLottery ? (
             <>
               {/* 当前彩种标题 */}
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-border-divider dark:border-gray-700">
+              <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3">
                   <LotteryIcon 
                     lotteryCode={selectedLottery}
@@ -546,7 +591,7 @@ export default function Home() {
                       setResults([])
                       setPage(1)
                     }}
-                    className="px-4 py-2 bg-text-muted hover:bg-text-secondary text-white text-sm font-medium rounded-md transition-colors"
+                    className="px-5 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-white text-sm font-semibold rounded-lg transition-all duration-300 hover:scale-105"
                   >
                     返回分类
                   </button>
@@ -555,31 +600,31 @@ export default function Home() {
 
           {/* 开奖记录表格 */}
               {loading ? (
-                <div className="text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                  <p className="mt-4 text-text-muted dark:text-gray-400">加载中...</p>
+                <div className="text-center py-16">
+                  <div className="inline-block animate-spin rounded-full h-14 w-14 border-4 border-blue-200 dark:border-blue-800 border-t-blue-600 dark:border-t-blue-400"></div>
+                  <p className="mt-6 text-gray-600 dark:text-gray-400 font-medium">加载中...</p>
                 </div>
               ) : results.length > 0 ? (
                 <>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
                     <table className="w-full">
-                      <thead className="bg-bg-light dark:bg-gray-700">
+                      <thead className="bg-gradient-to-r from-gray-50 to-blue-50/50 dark:from-gray-700 dark:to-gray-800">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                             奖期
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                             开奖号码
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                             开奖时间
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-medium text-text-muted dark:text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                             操作
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-bg-white dark:bg-gray-800 divide-y divide-border-divider dark:divide-gray-700">
+                      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {results.map((result, index) => {
                           // 越南传统彩票代码列表
                           const VIETNAMESE_LOTTERY_CODES = [
@@ -600,14 +645,14 @@ export default function Home() {
                           return (
                             <tr 
                               key={result.id} 
-                              className="hover:bg-bg-light dark:hover:bg-gray-700 animate-flip-in"
+                              className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 dark:hover:from-gray-700/50 dark:hover:to-gray-800/50 transition-all duration-200 animate-flip-in"
                               style={{ 
-                                animationDelay: `${index * 0.1}s`,
+                                animationDelay: `${index * 0.05}s`,
                                 opacity: 0,
                                 animationFillMode: 'forwards'
                               }}
                             >
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-dark dark:text-white">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-white">
                                 {result.issue}
                               </td>
                               <td className="px-6 py-4">
@@ -616,7 +661,7 @@ export default function Home() {
                                   lotteryCode={result.lottery_code}
                                 />
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-text-light dark:text-gray-400">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                 {formatOpenDate(result.open_date)}
                               </td>
                               <td className="px-6 py-4 text-center">
@@ -627,10 +672,10 @@ export default function Home() {
                                       setModalData({code: result.code, issue: result.issue})
                                       setModalOpen(true)
                                     }}
-                                    className="px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded-md shadow-soft transition-colors duration-200 inline-flex items-center gap-1"
+                                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-lg shadow-md shadow-blue-500/30 hover:shadow-lg transition-all duration-300 inline-flex items-center gap-1.5 hover:scale-105"
                                   >
                                     <span>查看详情</span>
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
@@ -643,10 +688,10 @@ export default function Home() {
                                       setBaacModalData({code: result.code, issue: result.issue})
                                       setBaacModalOpen(true)
                                     }}
-                                    className="px-3 py-1.5 bg-gold hover:bg-gold/90 text-white text-xs font-medium rounded-md shadow-soft transition-colors duration-200 inline-flex items-center gap-1"
+                                    className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-xs font-semibold rounded-lg shadow-md shadow-amber-500/30 hover:shadow-lg transition-all duration-300 inline-flex items-center gap-1.5 hover:scale-105"
                                   >
                                     <span>查看详情</span>
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
@@ -659,10 +704,10 @@ export default function Home() {
                                       setMax3dModalData({code: result.code, issue: result.issue})
                                       setMax3dModalOpen(true)
                                     }}
-                                    className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-medium rounded-md shadow-soft transition-colors duration-200 inline-flex items-center gap-1"
+                                    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-semibold rounded-lg shadow-md shadow-purple-500/30 hover:shadow-lg transition-all duration-300 inline-flex items-center gap-1.5 hover:scale-105"
                                   >
                                     <span>查看详情</span>
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
@@ -675,10 +720,10 @@ export default function Home() {
                                       setSuffixModalData({code: result.code, issue: result.issue, lotteryCode: result.lottery_code})
                                       setSuffixModalOpen(true)
                                     }}
-                                    className="px-3 py-1.5 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white text-xs font-medium rounded-md shadow-soft transition-colors duration-200 inline-flex items-center gap-1"
+                                    className="px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white text-xs font-semibold rounded-lg shadow-md shadow-teal-500/30 hover:shadow-lg transition-all duration-300 inline-flex items-center gap-1.5 hover:scale-105"
                                   >
                                     <span>查看详情</span>
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
@@ -692,39 +737,46 @@ export default function Home() {
                   </div>
 
                   {/* 分页 */}
-                  <div className="mt-6 flex justify-center gap-2">
+                  <div className="mt-8 flex justify-center items-center gap-4">
                     <button
                       onClick={() => setPage(p => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                      className="px-6 py-2.5 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 text-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-gray-300 hover:to-gray-400 dark:hover:from-gray-600 dark:hover:to-gray-500 transition-all duration-300 font-semibold shadow-md hover:shadow-lg disabled:hover:shadow-md disabled:hover:scale-100 hover:scale-105"
                     >
                       上一页
                     </button>
-                    <span className="px-4 py-2 text-gray-700 dark:text-gray-300">
+                    <span className="px-6 py-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-200 dark:border-gray-700 font-semibold shadow-sm">
                       第 {page} / {totalPages} 页
                     </span>
                     <button
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                      className="px-6 py-2.5 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 text-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-gray-300 hover:to-gray-400 dark:hover:from-gray-600 dark:hover:to-gray-500 transition-all duration-300 font-semibold shadow-md hover:shadow-lg disabled:hover:shadow-md disabled:hover:scale-100 hover:scale-105"
                     >
                       下一页
                     </button>
                   </div>
                 </>
               ) : (
-                <div className="text-center py-12">
-                  <p className="text-gray-600 dark:text-gray-400">暂无数据</p>
+                <div className="text-center py-16">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-400 font-medium">暂无数据</p>
                 </div>
               )}
             </>
           ) : (
-            <div className="text-center py-16">
-              <div className="text-6xl mb-4">🎲</div>
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+            <div className="text-center py-20">
+              <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 flex items-center justify-center shadow-lg">
+                <span className="text-5xl">🎲</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                 请从上方分类中选择彩种
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
                 点击任意彩票图标即可查看开奖记录
               </p>
             </div>
@@ -732,8 +784,12 @@ export default function Home() {
         </div>
 
         {/* 页脚 */}
-        <footer className="mt-12 text-center text-gray-600 dark:text-gray-400">
-          <p>© 2025 彩票开奖数据采集平台 - 免费提供 API 接口</p>
+        <footer className="mt-16 mb-8 text-center">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              © 2025 彩票开奖数据采集平台 - 免费提供 API 接口
+            </p>
+          </div>
         </footer>
       </div>
 
