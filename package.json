@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "import-types": "tsx scripts/import-lottery-types.ts",
-    "collect": "tsx scripts/collect-lottery-data.ts"
+    "collect": "tsx scripts/collect-lottery-data.ts",
+    "upload-images": "tsx scripts/upload-lottery-images.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
