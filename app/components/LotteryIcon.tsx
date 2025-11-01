@@ -1,5 +1,10 @@
+'use client'
+
 // 彩票图标组件
 // 为每个彩票提供对应的图标或 emoji 标识
+
+import Image from 'next/image'
+import { useState } from 'react'
 
 interface LotteryIconProps {
   lotteryCode: string
@@ -332,35 +337,40 @@ function getGradientColors(lotteryCode: string): string {
 }
 
 export default function LotteryIcon({ lotteryCode, lotteryName, size = 'md' }: LotteryIconProps) {
+  const [imageError, setImageError] = useState(false)
   const imageUrl = LOTTERY_IMAGE_URLS[lotteryCode]
   const icon = LOTTERY_ICONS[lotteryCode]
   const gradient = getGradientColors(lotteryCode)
-  
+
   const sizeClasses = {
     sm: 'w-8 h-8 text-base',
     md: 'w-12 h-12 text-2xl',
     lg: 'w-16 h-16 text-3xl'
   }
 
+  const sizePixels = {
+    sm: 32,
+    md: 48,
+    lg: 64
+  }
+
   // 优先使用 Supabase 存储的图片
-  if (imageUrl) {
+  if (imageUrl && !imageError) {
     const fileExt = imageUrl.endsWith('.jpg') ? '.jpg' : '.png'
     const supabaseImageUrl = `https://ixqsqmftydqsibrjkuyc.supabase.co/storage/v1/object/public/lottery-logos/${lotteryCode}${fileExt}`
     
     return (
       <div className={`${sizeClasses[size]} relative rounded-full overflow-hidden shadow-md ring-2 ring-white dark:ring-gray-700`}>
-        <img 
+        <Image
           src={supabaseImageUrl}
           alt={lotteryName}
+          width={sizePixels[size]}
+          height={sizePixels[size]}
           className="w-full h-full object-cover"
-          onError={(e) => {
-            // 图片加载失败时隐藏图片，显示备用方案
-            e.currentTarget.style.display = 'none'
-            const parent = e.currentTarget.parentElement
-            if (parent) {
-              parent.innerHTML = `<div class="w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-bold">${icon || lotteryName.charAt(0)}</div>`
-            }
-          }}
+          loading="lazy"
+          quality={85}
+          onError={() => setImageError(true)}
+          unoptimized // 因为Supabase已经提供CDN，不需要Next.js再次优化
         />
       </div>
     )
