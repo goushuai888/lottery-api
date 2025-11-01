@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import type { LotteryType, LotteryResult } from '@/lib/types'
 import LotteryCodeDisplay from './components/LotteryCodeDisplay'
 import VietnameseDetailsModal from './components/VietnameseDetailsModal'
+import LotteryIcon from './components/LotteryIcon'
 
 export default function Home() {
   const [lotteryTypes, setLotteryTypes] = useState<LotteryType[]>([])
@@ -347,10 +348,12 @@ export default function Home() {
                   className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200 border-2 border-transparent hover:border-blue-500"
                 >
                   <div className="flex flex-col items-center text-center space-y-2">
-                    {/* 彩票图标占位 */}
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md">
-                      {lottery.lottery_name.charAt(0)}
-                    </div>
+                    {/* 彩票图标 */}
+                    <LotteryIcon 
+                      lotteryCode={lottery.lottery_code}
+                      lotteryName={lottery.lottery_name}
+                      size="md"
+                    />
                     {/* 彩票名称 */}
                     <div className="text-sm font-medium text-gray-800 dark:text-white break-words w-full">
                       {lottery.lottery_name}
