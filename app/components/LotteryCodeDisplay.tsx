@@ -11,26 +11,58 @@ interface Props {
 export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   // 简单字符串格式
   if (typeof code === 'string') {
-    // 六合彩特殊显示（带生肖和颜色）
+    // 六合彩特殊显示（带生肖和颜色）- 6+1 格式
     if (isLiuHeCai(lotteryCode)) {
       const numbers = code.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n))
+      // 六合彩是 6 个开奖号码 + 1 个特别号码
+      const mainNumbers = numbers.slice(0, 6)  // 前6个
+      const specialNumber = numbers.length === 7 ? numbers[6] : null  // 第7个
+      
       return (
-        <div className="flex gap-2 flex-wrap">
-          {numbers.map((num, idx) => {
-            const color = getBallColor(num)
-            const zodiac = getZodiac(num)
-            const colorClass = getColorClass(color)
-            
-            return (
-              <div
-                key={idx}
-                className={`inline-flex flex-col items-center justify-center w-12 h-14 rounded-lg bg-gradient-to-br ${colorClass} text-white font-bold shadow-md`}
-              >
-                <div className="text-base leading-tight">{num}</div>
-                <div className="text-xs leading-tight">{zodiac}</div>
+        <div className="space-y-3">
+          {/* 开奖号码（前6个）*/}
+          {mainNumbers.length > 0 && (
+            <div className="flex gap-2 flex-wrap justify-center">
+              {mainNumbers.map((num, idx) => {
+                const color = getBallColor(num)
+                const zodiac = getZodiac(num)
+                const colorClass = getColorClass(color)
+                
+                return (
+                  <div
+                    key={idx}
+                    className={`inline-flex flex-col items-center justify-center w-12 h-14 rounded-lg bg-gradient-to-br ${colorClass} text-white font-bold shadow-lg border-2 border-white/30`}
+                  >
+                    <div className="text-base leading-tight">{num}</div>
+                    <div className="text-xs leading-tight">{zodiac}</div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+          
+          {/* 特别号码（第7个，突出显示）*/}
+          {specialNumber !== null && (
+            <div className="flex gap-2 justify-center">
+              <div className="flex flex-col items-center">
+                <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-1">特码</div>
+                {(() => {
+                  const color = getBallColor(specialNumber)
+                  const zodiac = getZodiac(specialNumber)
+                  const colorClass = getColorClass(color)
+                  
+                  return (
+                    <div
+                      className={`inline-flex flex-col items-center justify-center w-14 h-16 rounded-lg bg-gradient-to-br ${colorClass} text-white font-bold shadow-xl border-4 border-yellow-300 ring-2 ring-yellow-400`}
+                    >
+                      <div className="text-lg leading-tight">{specialNumber}</div>
+                      <div className="text-xs leading-tight">{zodiac}</div>
+                    </div>
+                  )
+                })()}
               </div>
-            )
-          })}
+            </div>
+          )}
         </div>
       )
     }
