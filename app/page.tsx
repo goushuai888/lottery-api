@@ -37,6 +37,7 @@ export default function Home() {
   // 彩票分类相关状态
   const [activeCategory, setActiveCategory] = useState<string>('high_frequency')
   const [categorizedLotteries, setCategorizedLotteries] = useState<Record<string, any>>({})
+  const [overseasSubcategory, setOverseasSubcategory] = useState<string>('all') // 境外彩种子分类
   const [categoryLoading, setCategoryLoading] = useState(true)
 
   // 加载彩种列表
@@ -53,15 +54,36 @@ export default function Home() {
   // 加载分类彩种
   useEffect(() => {
     setCategoryLoading(true)
-    fetch('/api/lottery-types/by-category')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setCategorizedLotteries(data.data)
-        }
-      })
-      .finally(() => setCategoryLoading(false))
-  }, [])
+    
+    // 如果是境外彩种且选择了非"全部"的子分类，则加载子分类数据
+    if (activeCategory === 'overseas' && overseasSubcategory !== 'all') {
+      fetch(`/api/lottery-types/overseas-subcategories?subcategory=${overseasSubcategory}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // 更新境外彩种的数据
+            setCategorizedLotteries(prev => ({
+              ...prev,
+              overseas: {
+                name: '境外彩种',
+                lotteries: data.data
+              }
+            }))
+          }
+        })
+        .finally(() => setCategoryLoading(false))
+    } else {
+      // 加载所有分类
+      fetch('/api/lottery-types/by-category')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setCategorizedLotteries(data.data)
+          }
+        })
+        .finally(() => setCategoryLoading(false))
+    }
+  }, [activeCategory, overseasSubcategory])
 
   // 加载统计信息
   useEffect(() => {
@@ -321,7 +343,10 @@ export default function Home() {
               极速彩种
             </button>
             <button
-              onClick={() => setActiveCategory('overseas')}
+              onClick={() => {
+                setActiveCategory('overseas')
+                setOverseasSubcategory('all')
+              }}
               className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
                 activeCategory === 'overseas'
                   ? 'bg-blue-600 text-white shadow-md'
@@ -343,6 +368,72 @@ export default function Home() {
               计算型彩种
             </button>
           </div>
+
+          {/* 境外彩种子分类 */}
+          {activeCategory === 'overseas' && (
+            <div className="flex flex-wrap gap-2 mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+              <button
+                onClick={() => setOverseasSubcategory('all')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  overseasSubcategory === 'all'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+              >
+                全部
+              </button>
+              <button
+                onClick={() => setOverseasSubcategory('vietnam')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  overseasSubcategory === 'vietnam'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+              >
+                🇻🇳 越南
+              </button>
+              <button
+                onClick={() => setOverseasSubcategory('thailand')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  overseasSubcategory === 'thailand'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+              >
+                🇹🇭 泰国
+              </button>
+              <button
+                onClick={() => setOverseasSubcategory('indonesia')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  overseasSubcategory === 'indonesia'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+              >
+                🇮🇩 印尼
+              </button>
+              <button
+                onClick={() => setOverseasSubcategory('canada')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  overseasSubcategory === 'canada'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+              >
+                🇨🇦 加拿大
+              </button>
+              <button
+                onClick={() => setOverseasSubcategory('other')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  overseasSubcategory === 'other'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+              >
+                🌍 其他
+              </button>
+            </div>
+          )}
 
           {/* 彩票列表 */}
           {categoryLoading ? (
