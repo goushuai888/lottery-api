@@ -73,7 +73,7 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         {code.split(',').map((num, idx) => (
           <span
             key={idx}
-            className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 text-white font-bold text-sm shadow-md"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-danger to-danger-dark text-white font-bold text-sm shadow-card"
           >
             {num}
           </span>
@@ -94,7 +94,7 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
             {complexCode.code.split(',').filter((n: string) => n).map((num: string, idx: number) => (
               <span
                 key={idx}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-white font-bold text-sm shadow-md"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-dark text-white font-bold text-sm shadow-card"
               >
                 {num}
               </span>
