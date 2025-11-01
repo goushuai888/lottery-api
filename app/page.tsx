@@ -6,7 +6,6 @@ import LotteryCodeDisplay from './components/LotteryCodeDisplay'
 import VietnameseDetailsModal from './components/VietnameseDetailsModal'
 import LotteryIcon from './components/LotteryIcon'
 import AnimatedNumber from './components/AnimatedNumber'
-import LatestDraws from './components/LatestDraws'
 
 export default function Home() {
   const [lotteryTypes, setLotteryTypes] = useState<LotteryType[]>([])
@@ -195,7 +194,7 @@ export default function Home() {
 
         {/* 统计面板 */}
         {statistics && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
               <div className="flex items-center justify-between">
                 <div>
@@ -234,9 +233,6 @@ export default function Home() {
                 <div className="text-5xl opacity-20">🏆</div>
               </div>
             </div>
-            
-            {/* 最新开奖轮播 */}
-            <LatestDraws />
           </div>
         )}
 
