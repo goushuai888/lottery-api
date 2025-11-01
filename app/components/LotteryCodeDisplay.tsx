@@ -162,46 +162,19 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
     )
   }
 
-  // MAX3D 特殊多段式
+  // MAX3D 特殊多段式 - 只显示特别奖（详情由模态框展示）
   if (complexCode.code_1 || complexCode.code_sp) {
     return (
       <div className="space-y-2 p-3 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg">
         <div className="text-xs font-bold text-purple-700 dark:text-purple-400 mb-2 text-center">
           🎲 MAX3D
         </div>
-        {['code_1', 'code_2', 'code_3'].map((key, index) => {
-          const codeData = complexCode[key]
-          if (!codeData) return null
-          
-          // 处理数组格式
-          const codeArray = Array.isArray(codeData) ? codeData : [codeData]
-          
-          return (
-            <div key={key} className="bg-white dark:bg-gray-800 rounded-md p-2">
-              <div className="text-xs font-bold text-purple-600 dark:text-purple-400 mb-1 text-center">
-                第{index + 1}组
-              </div>
-              <div className="flex flex-col gap-1.5">
-                {codeArray.map((line: string, lineIdx: number) => (
-                  <div key={lineIdx} className="flex gap-1.5 justify-center">
-                    {(typeof line === 'string' ? line : String(line)).split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm shadow-md"
-                      >
-                        {num}
-                      </span>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )
-        })}
+        
+        {/* 只显示特别奖 */}
         {complexCode.code_sp && (
           <div className="bg-white dark:bg-gray-800 rounded-md p-2">
             <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-1 text-center">
-              ⭐ 特别号
+              特别奖
             </div>
             <div className="flex flex-col gap-1.5">
               {(Array.isArray(complexCode.code_sp) ? complexCode.code_sp : [complexCode.code_sp]).map((line: string, lineIdx: number) => (
@@ -209,7 +182,7 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
                   {(typeof line === 'string' ? line : String(line)).split(',').filter((n: string) => n).map((num: string, idx: number) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-red-500 text-white font-bold text-base shadow-md border-2 border-pink-300"
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-red-500 text-white font-bold text-base shadow-md"
                     >
                       {num}
                     </span>
@@ -219,6 +192,10 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
             </div>
           </div>
         )}
+        
+        <div className="text-xs text-center text-purple-600 dark:text-purple-400 mt-2">
+          点击"查看详情"查看完整开奖信息
+        </div>
       </div>
     )
   }

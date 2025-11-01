@@ -5,6 +5,7 @@ import type { LotteryType, LotteryResult } from '@/lib/types'
 import LotteryCodeDisplay from './components/LotteryCodeDisplay'
 import VietnameseDetailsModal from './components/VietnameseDetailsModal'
 import BaacDetailsModal from './components/BaacDetailsModal'
+import Max3DDetailsModal from './components/Max3DDetailsModal'
 import LotteryIcon from './components/LotteryIcon'
 import AnimatedNumber from './components/AnimatedNumber'
 import { formatOpenDate } from '@/lib/time-utils'
@@ -39,6 +40,10 @@ export default function Home() {
   // BAAC彩票详情模态框
   const [baacModalOpen, setBaacModalOpen] = useState(false)
   const [baacModalData, setBaacModalData] = useState<{code: any, issue: string} | null>(null)
+  
+  // MAX3D彩票详情模态框
+  const [max3dModalOpen, setMax3dModalOpen] = useState(false)
+  const [max3dModalData, setMax3dModalData] = useState<{code: any, issue: string} | null>(null)
   
   // 彩票分类相关状态
   const [activeCategory, setActiveCategory] = useState<string>('high_frequency')
@@ -636,6 +641,22 @@ export default function Home() {
                                     </svg>
                                   </button>
                                 )}
+                                
+                                {/* MAX3D彩票详情按钮 */}
+                                {result.lottery_code === 'MAX3D' && (
+                                  <button
+                                    onClick={() => {
+                                      setMax3dModalData({code: result.code, issue: result.issue})
+                                      setMax3dModalOpen(true)
+                                    }}
+                                    className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-medium rounded-md shadow-soft transition-colors duration-200 inline-flex items-center gap-1"
+                                  >
+                                    <span>查看详情</span>
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                  </button>
+                                )}
                               </td>
                             </tr>
                           )
@@ -707,6 +728,16 @@ export default function Home() {
           onClose={() => setBaacModalOpen(false)}
           code={baacModalData.code}
           issue={baacModalData.issue}
+        />
+      )}
+      
+      {/* MAX3D彩票详情模态框 */}
+      {max3dModalOpen && max3dModalData && (
+        <Max3DDetailsModal 
+          isOpen={max3dModalOpen}
+          onClose={() => setMax3dModalOpen(false)}
+          code={max3dModalData.code}
+          issue={max3dModalData.issue}
         />
       )}
     </div>
