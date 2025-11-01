@@ -404,9 +404,16 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
         {complexCode.code_mid2 && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600 dark:text-gray-400">第2/3位</span>
-            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
-              {complexCode.code_mid2}
-            </span>
+            <div className="flex gap-2">
+              {complexCode.code_mid2.split('').map((num: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         
