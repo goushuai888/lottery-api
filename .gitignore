@@ -36,3 +36,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# database exports
+/database-export/
+*.sql
+*.dump
+*.csv
