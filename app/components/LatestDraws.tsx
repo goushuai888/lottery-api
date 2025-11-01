@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import LotteryCodeDisplay from './LotteryCodeDisplay'
+import { formatOpenDateShort } from '@/lib/time-utils'
 
 interface LatestDraw {
   lottery_code: string
@@ -103,12 +104,7 @@ export default function LatestDraws() {
           </div>
 
           <div className="text-orange-100 text-xs">
-            {new Date(currentDraw.open_date).toLocaleString('zh-CN', {
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+            {formatOpenDateShort(currentDraw.open_date)}
           </div>
         </div>
 

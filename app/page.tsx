@@ -7,6 +7,7 @@ import VietnameseDetailsModal from './components/VietnameseDetailsModal'
 import BaacDetailsModal from './components/BaacDetailsModal'
 import LotteryIcon from './components/LotteryIcon'
 import AnimatedNumber from './components/AnimatedNumber'
+import { formatOpenDate } from '@/lib/time-utils'
 
 export default function Home() {
   const [lotteryTypes, setLotteryTypes] = useState<LotteryType[]>([])
@@ -625,7 +626,7 @@ export default function Home() {
                                 />
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-text-light dark:text-gray-400">
-                                {new Date(result.open_date).toLocaleString('zh-CN')}
+                                {formatOpenDate(result.open_date)}
                               </td>
                               <td className="px-6 py-4 text-center">
                                 {/* 越南传统彩票详情按钮 */}

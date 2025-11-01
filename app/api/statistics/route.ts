@@ -1,22 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { getTimeAgo as getTimeAgoUtil } from '@/lib/time-utils'
 
 export const dynamic = 'force-dynamic'
-
-// 计算时间差
-function getTimeAgo(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMins = Math.floor(diffMs / 60000)
-  const diffHours = Math.floor(diffMs / 3600000)
-  const diffDays = Math.floor(diffMs / 86400000)
-
-  if (diffMins < 1) return '刚刚'
-  if (diffMins < 60) return `${diffMins}分钟前`
-  if (diffHours < 24) return `${diffHours}小时前`
-  if (diffDays < 7) return `${diffDays}天前`
-  return date.toLocaleDateString('zh-CN')
-}
 
 // GET /api/statistics - 获取彩票统计信息（使用优化视图）
 export async function GET(request: Request) {
@@ -52,7 +38,7 @@ export async function GET(request: Request) {
         time: latestData.open_date,
         lottery_code: latestData.lottery_code,
         issue: latestData.issue,
-        time_ago: getTimeAgo(new Date(latestData.open_date))
+        time_ago: getTimeAgoUtil(latestData.open_date)
       } : null
     }
 
