@@ -664,7 +664,7 @@ export default function Home() {
                               </td>
                               <td className="px-6 py-4 text-center">
                                 {/* 越南传统彩票详情按钮 */}
-                                {isVietnameseLottery && (
+                                {isVietnameseLottery ? (
                                   <button
                                     onClick={() => {
                                       setModalData({code: result.code, issue: result.issue})
@@ -677,10 +677,8 @@ export default function Home() {
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
-                                )}
-                                
-                                {/* BAAC彩票详情按钮 */}
-                                {result.lottery_code === 'BAAC' && (
+                                ) : /* BAAC彩票详情按钮 */
+                                result.lottery_code === 'BAAC' ? (
                                   <button
                                     onClick={() => {
                                       setBaacModalData({code: result.code, issue: result.issue})
@@ -693,10 +691,8 @@ export default function Home() {
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
-                                )}
-                                
-                                {/* MAX3D彩票详情按钮 */}
-                                {result.lottery_code === 'MAX3D' && (
+                                ) : /* MAX3D彩票详情按钮 */
+                                result.lottery_code === 'MAX3D' ? (
                                   <button
                                     onClick={() => {
                                       setMax3dModalData({code: result.code, issue: result.issue})
@@ -709,10 +705,8 @@ export default function Home() {
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
-                                )}
-                                
-                                {/* 带后缀彩票详情按钮（老挝VIP、ZCVIP等） */}
-                                {isSuffixLottery && (
+                                ) : /* 带后缀彩票详情按钮（老挝VIP、ZCVIP等） */
+                                isSuffixLottery ? (
                                   <button
                                     onClick={() => {
                                       setSuffixModalData({code: result.code, issue: result.issue, lotteryCode: result.lottery_code})
@@ -725,7 +719,7 @@ export default function Home() {
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </button>
-                                )}
+                                ) : null}
                               </td>
                             </tr>
                           )
