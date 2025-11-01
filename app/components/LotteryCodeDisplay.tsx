@@ -356,59 +356,69 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
     )
   }
 
-  // 带后缀号码的彩票格式
-  if (complexCode.code && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_pre2 || complexCode.code_mid2)) {
+  // 带后缀号码的彩票格式（老挝VIP等）
+  if (complexCode.code && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_last4 || complexCode.code_pre2 || complexCode.code_mid2)) {
     return (
-      <div className="space-y-3 p-3 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-lg">
-        <div className="text-xs font-bold text-teal-700 dark:text-teal-400 mb-2 text-center">
-          🎯 带后缀彩票
-        </div>
-        {/* 主要号码 */}
+      <div className="space-y-2">
+        {/* 主要开奖号码 */}
         {typeof complexCode.code === 'string' && (
-          <div>
-            <div className="text-xs font-bold text-teal-700 dark:text-teal-400 mb-2">
-              主要号码
-            </div>
-            <div className="flex gap-2 justify-center flex-wrap">
-              {complexCode.code.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 text-white font-bold text-base shadow-md"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">开奖号码</span>
+            <span className="text-2xl font-bold text-primary dark:text-primary-light font-mono tracking-wider">
+              {complexCode.code.replace(/,/g, '')}
+            </span>
           </div>
         )}
         
-        {/* 辅助号码 */}
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          {complexCode.code_pre2 && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 text-center">
-              <div className="font-bold text-teal-600 dark:text-teal-400 mb-1">前2位</div>
-              <div className="font-mono text-lg">{complexCode.code_pre2}</div>
-            </div>
-          )}
-          {complexCode.code_mid2 && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 text-center">
-              <div className="font-bold text-teal-600 dark:text-teal-400 mb-1">中间2位</div>
-              <div className="font-mono text-lg">{complexCode.code_mid2}</div>
-            </div>
-          )}
-          {complexCode.code_last2 && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 text-center">
-              <div className="font-bold text-teal-600 dark:text-teal-400 mb-1">后2位</div>
-              <div className="font-mono text-lg">{complexCode.code_last2}</div>
-            </div>
-          )}
-          {complexCode.code_last3 && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 text-center">
-              <div className="font-bold text-teal-600 dark:text-teal-400 mb-1">后3位</div>
-              <div className="font-mono text-lg">{complexCode.code_last3}</div>
-            </div>
-          )}
-        </div>
+        {/* 后四位 */}
+        {complexCode.code_last4 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">后四位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_last4}
+            </span>
+          </div>
+        )}
+        
+        {/* 后三位 */}
+        {complexCode.code_last3 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">后三位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_last3}
+            </span>
+          </div>
+        )}
+        
+        {/* 后二位 */}
+        {complexCode.code_last2 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">后二位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_last2}
+            </span>
+          </div>
+        )}
+        
+        {/* 第2/3位 */}
+        {complexCode.code_mid2 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">第2/3位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_mid2}
+            </span>
+          </div>
+        )}
+        
+        {/* 前2位 */}
+        {complexCode.code_pre2 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">前2位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_pre2}
+            </span>
+          </div>
+        )}
       </div>
     )
   }
@@ -416,66 +426,60 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   // ZCVIP 特殊格式
   if (complexCode.code2 && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_last4)) {
     return (
-      <div className="space-y-2 p-3 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-lg">
-        <div className="text-xs font-bold text-indigo-700 dark:text-indigo-400 mb-2 text-center">
+      <div className="space-y-2">
+        <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-2">
           💎 ZCVIP
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          {complexCode.code && typeof complexCode.code === 'string' && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2">
-              <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1 text-center">
-                主号
-              </div>
-              <div className="flex gap-1 justify-center flex-wrap">
-                {complexCode.code.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-md"
-                  >
-                    {num}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          {complexCode.code2 && typeof complexCode.code2 === 'string' && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2">
-              <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1 text-center">
-                副号
-              </div>
-              <div className="flex gap-1 justify-center flex-wrap">
-                {complexCode.code2.split(',').filter((n: string) => n).map((num: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm shadow-md"
-                  >
-                    {num}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          {complexCode.code_last2 && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 text-center">
-              <div className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">后2位</div>
-              <div className="font-mono text-base">{complexCode.code_last2}</div>
-            </div>
-          )}
-          {complexCode.code_last3 && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 text-center">
-              <div className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">后3位</div>
-              <div className="font-mono text-base">{complexCode.code_last3}</div>
-            </div>
-          )}
-          {complexCode.code_last4 && (
-            <div className="bg-white dark:bg-gray-800 rounded-md p-2 text-center">
-              <div className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">后4位</div>
-              <div className="font-mono text-base">{complexCode.code_last4}</div>
-            </div>
-          )}
-        </div>
+        
+        {/* 主号 */}
+        {complexCode.code && typeof complexCode.code === 'string' && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">主号</span>
+            <span className="text-xl font-bold text-indigo-700 dark:text-indigo-300 font-mono tracking-wider">
+              {complexCode.code.replace(/,/g, '')}
+            </span>
+          </div>
+        )}
+        
+        {/* 副号 */}
+        {complexCode.code2 && typeof complexCode.code2 === 'string' && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">副号</span>
+            <span className="text-xl font-bold text-purple-700 dark:text-purple-300 font-mono tracking-wider">
+              {complexCode.code2.replace(/,/g, '')}
+            </span>
+          </div>
+        )}
+        
+        {/* 后四位 */}
+        {complexCode.code_last4 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">后四位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_last4}
+            </span>
+          </div>
+        )}
+        
+        {/* 后三位 */}
+        {complexCode.code_last3 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">后三位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_last3}
+            </span>
+          </div>
+        )}
+        
+        {/* 后二位 */}
+        {complexCode.code_last2 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">后二位</span>
+            <span className="text-lg font-bold text-gray-800 dark:text-white font-mono">
+              {complexCode.code_last2}
+            </span>
+          </div>
+        )}
       </div>
     )
   }
