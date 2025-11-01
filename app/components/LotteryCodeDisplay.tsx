@@ -213,12 +213,28 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   if (complexCode.code && complexCode.code1 && !complexCode.code2 && !complexCode.code3 && !complexCode.code_hash) {
     // 如果是六合彩（XGLHC或MOLHC），使用带生肖颜色的显示（仿采集源）
     if (isLiuHeCai(lotteryCode)) {
-      const mainNumbers = typeof complexCode.code === 'string' 
-        ? complexCode.code.split(',').map((n: string) => parseInt(n.trim())).filter((n: number) => !isNaN(n))
-        : []
-      const extraNumbers = typeof complexCode.code1 === 'string'
-        ? complexCode.code1.split(',').map((n: string) => parseInt(n.trim())).filter((n: number) => !isNaN(n))
-        : []
+      // 处理 code 字段（可能包含+号分隔的特码）
+      let mainNumbers: number[] = []
+      let specialNumber: number | null = null
+      
+      if (typeof complexCode.code === 'string') {
+        // 如果包含+号，说明特码在同一个字符串里
+        if (complexCode.code.includes('+')) {
+          const parts = complexCode.code.split('+')
+          mainNumbers = parts[0].split(',').map((n: string) => parseInt(n.trim())).filter((n: number) => !isNaN(n))
+          const specialParsed = parseInt(parts[1]?.trim() || '')
+          specialNumber = !isNaN(specialParsed) ? specialParsed : null
+        } else {
+          // 否则，特码在 code1 字段
+          mainNumbers = complexCode.code.split(',').map((n: string) => parseInt(n.trim())).filter((n: number) => !isNaN(n))
+        }
+      }
+      
+      // 处理 code1 字段（特码）
+      if (!specialNumber && typeof complexCode.code1 === 'string' && complexCode.code1.trim()) {
+        const specialParsed = parseInt(complexCode.code1.trim())
+        specialNumber = !isNaN(specialParsed) ? specialParsed : null
+      }
       
       return (
         <div className="flex items-center gap-3 flex-wrap">
@@ -240,28 +256,27 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           })}
           
           {/* 加号分隔符 */}
-          {extraNumbers.length > 0 && (
+          {specialNumber !== null && (
             <div className="text-3xl font-bold text-gray-600 dark:text-gray-400 mx-1">
               +
             </div>
           )}
           
           {/* 特别号码（第7个）*/}
-          {extraNumbers.map((num: number, idx: number) => {
-            const color = getBallColor(num)
-            const zodiac = getZodiac(num)
+          {specialNumber !== null && (() => {
+            const color = getBallColor(specialNumber)
+            const zodiac = getZodiac(specialNumber)
             const colorClass = getColorClass(color)
             
             return (
               <div
-                key={idx}
                 className={`inline-flex flex-col items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br ${colorClass} text-white font-bold shadow-lg`}
               >
-                <div className="text-lg leading-tight">{num}</div>
+                <div className="text-lg leading-tight">{specialNumber}</div>
                 <div className="text-xs leading-tight">{zodiac}</div>
               </div>
             )
-          })}
+          })()}
         </div>
       )
     }
