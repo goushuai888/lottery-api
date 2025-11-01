@@ -452,10 +452,10 @@ export default function Home() {
               {categorizedLotteries[activeCategory]?.lotteries?.map((lottery: LotteryType) => (
                 <div
                   key={lottery.lottery_code}
-                  className="group relative bg-gradient-to-br from-bg-white to-bg-light dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 cursor-pointer hover:shadow-card hover:scale-105 transition-all duration-200 border border-border-light hover:border-primary overflow-hidden"
+                  className="bg-gradient-to-br from-bg-white to-bg-light dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 hover:shadow-card transition-all duration-200 border border-border-light hover:border-primary"
                 >
-                  {/* 默认显示内容 */}
-                  <div className="flex flex-col items-center text-center space-y-2">
+                  {/* 彩票图标和名称 */}
+                  <div className="flex flex-col items-center text-center space-y-3 mb-3">
                     {/* 彩票图标 */}
                     <LotteryIcon 
                       lotteryCode={lottery.lottery_code}
@@ -463,17 +463,13 @@ export default function Home() {
                       size="md"
                     />
                     {/* 彩票名称 */}
-                    <div className="text-sm font-medium text-text-dark dark:text-white break-words w-full">
+                    <div className="text-sm font-medium text-text-dark dark:text-white break-words w-full min-h-[2.5rem] flex items-center justify-center">
                       {lottery.lottery_name}
-                    </div>
-                    {/* 彩票代码 */}
-                    <div className="text-xs text-text-light dark:text-gray-400">
-                      {lottery.lottery_code}
                     </div>
                   </div>
 
-                  {/* 悬停时显示的操作按钮 */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/95 to-primary-dark/95 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center gap-2 rounded-lg">
+                  {/* 操作按钮 - 始终显示 */}
+                  <div className="flex flex-col gap-2">
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -483,7 +479,7 @@ export default function Home() {
                         // 滚动到数据查看区域
                         document.getElementById('data-view')?.scrollIntoView({ behavior: 'smooth' })
                       }}
-                      className="px-4 py-2 bg-white text-primary font-medium rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                      className="w-full px-3 py-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-medium rounded transition-colors duration-200"
                     >
                       历史开奖
                     </button>
@@ -492,7 +488,7 @@ export default function Home() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="px-4 py-2 bg-white text-secondary font-medium rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                      className="w-full px-3 py-1.5 bg-white dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-500 text-text-dark dark:text-white text-xs font-medium rounded transition-colors duration-200 text-center border border-border dark:border-gray-500"
                     >
                       查看官网
                     </a>
