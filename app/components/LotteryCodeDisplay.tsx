@@ -13,10 +13,14 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
   if (typeof code === 'string') {
     // 六合彩特殊显示（带生肖和颜色）- 6+1 格式（仿采集源）
     if (isLiuHeCai(lotteryCode)) {
-      const numbers = code.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n))
-      // 六合彩是 6 个开奖号码 + 1 个特别号码
-      const mainNumbers = numbers.slice(0, 6)  // 前6个
-      const specialNumber = numbers.length === 7 ? numbers[6] : null  // 第7个
+      // 六合彩格式：8,47,10,39,5,19+45 （用+号分隔特码）
+      const parts = code.split('+')
+      const mainNumbersStr = parts[0] || ''
+      const specialNumberStr = parts[1] || ''
+      
+      const mainNumbers = mainNumbersStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n))
+      const specialNumberParsed = specialNumberStr ? parseInt(specialNumberStr.trim()) : null
+      const specialNumber = specialNumberParsed && !isNaN(specialNumberParsed) ? specialNumberParsed : null
       
       return (
         <div className="flex items-center gap-3 flex-wrap">
