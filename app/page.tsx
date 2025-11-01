@@ -107,8 +107,8 @@ export default function Home() {
     // 初始加载
     fetchStatistics()
 
-    // 每30秒自动刷新统计数据
-    const interval = setInterval(fetchStatistics, 30000)
+    // 每15秒自动刷新统计数据
+    const interval = setInterval(fetchStatistics, 15000)
     
     return () => clearInterval(interval)
   }, [])
@@ -182,8 +182,8 @@ export default function Home() {
     // 立即执行一次检查
     checkForUpdates()
 
-    // 每 10 秒检查一次（更适合高频彩种）
-    const interval = setInterval(checkForUpdates, 10000)
+    // 每 5 秒检查一次（更适合高频彩种）
+    const interval = setInterval(checkForUpdates, 5000)
 
     return () => clearInterval(interval)
   }, [selectedLottery, page, latestIssue, autoRefresh])
