@@ -4,28 +4,62 @@
 
 @layer base {
   :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+    /* 品牌主色 */
+    --color-primary: #24a4d9;
+    --color-primary-dark: #18a7dc;
+    --color-primary-light: #6bc0e5;
+    
+    /* 辅助色 */
+    --color-secondary: #0093FF;
+    --color-danger: #f61b21;
+    --color-gold: #C4A235;
+    
+    /* 背景色 */
+    --color-bg-primary: #f2f2f2;
+    --color-bg-white: #ffffff;
+    --color-bg-light: #f6f6f6;
+    
+    /* 文字色 */
+    --color-text-primary: #4a4a4a;
+    --color-text-dark: #333333;
+    --color-text-muted: #888888;
+    --color-text-light: #999999;
+    
+    /* 边框色 */
+    --color-border: #e0e0e0;
+    --color-border-light: #dddddd;
+    
+    /* 阴影 */
+    --shadow-header: 0px 4px 16px 0px rgba(44, 50, 65, 0.08);
+    --shadow-card: 0.5px 1px 10px #dfdfdf;
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-      --background-end-rgb: 0, 0, 0;
+      --color-bg-primary: #1a1a1a;
+      --color-bg-white: #2a2a2a;
+      --color-bg-light: #1f1f1f;
+      --color-text-primary: #e5e5e5;
+      --color-text-dark: #ffffff;
+      --color-text-muted: #a0a0a0;
+      --color-text-light: #888888;
+      --color-border: #404040;
+      --color-border-light: #505050;
     }
   }
 
+  * {
+    @apply border-border;
+  }
+
   body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgb(var(--background-end-rgb))
-      )
-      rgb(var(--background-start-rgb));
-    font-family: var(--font-inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+    @apply bg-bg-primary text-text-primary;
+    font-family: var(--font-inter), 'Microsoft YaHei', '微软雅黑', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-text-dark font-semibold;
   }
 }
 
