@@ -6,6 +6,7 @@ import LotteryCodeDisplay from './components/LotteryCodeDisplay'
 import VietnameseDetailsModal from './components/VietnameseDetailsModal'
 import BaacDetailsModal from './components/BaacDetailsModal'
 import Max3DDetailsModal from './components/Max3DDetailsModal'
+import SuffixLotteryDetailsModal from './components/SuffixLotteryDetailsModal'
 import LotteryIcon from './components/LotteryIcon'
 import AnimatedNumber from './components/AnimatedNumber'
 import { formatOpenDate } from '@/lib/time-utils'
@@ -44,6 +45,10 @@ export default function Home() {
   // MAX3D彩票详情模态框
   const [max3dModalOpen, setMax3dModalOpen] = useState(false)
   const [max3dModalData, setMax3dModalData] = useState<{code: any, issue: string} | null>(null)
+  
+  // 带后缀彩票（老挝VIP、ZCVIP等）详情模态框
+  const [suffixModalOpen, setSuffixModalOpen] = useState(false)
+  const [suffixModalData, setSuffixModalData] = useState<{code: any, issue: string, lotteryCode: string} | null>(null)
   
   // 彩票分类相关状态
   const [activeCategory, setActiveCategory] = useState<string>('high_frequency')
@@ -587,6 +592,11 @@ export default function Home() {
                           // 判断是否为越南传统彩票
                           const isVietnameseLottery = VIETNAMESE_LOTTERY_CODES.includes(result.lottery_code)
                           
+                          // 判断是否为带后缀彩票（老挝VIP、ZCVIP等）
+                          const isSuffixLottery = typeof result.code === 'object' && result.code !== null && 
+                            (result.code.code_last2 || result.code.code_last3 || result.code.code_last4 || 
+                             result.code.code_pre2 || result.code.code_mid2 || result.code.code2)
+                          
                           return (
                             <tr 
                               key={result.id} 
@@ -650,6 +660,22 @@ export default function Home() {
                                       setMax3dModalOpen(true)
                                     }}
                                     className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-medium rounded-md shadow-soft transition-colors duration-200 inline-flex items-center gap-1"
+                                  >
+                                    <span>查看详情</span>
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                  </button>
+                                )}
+                                
+                                {/* 带后缀彩票详情按钮（老挝VIP、ZCVIP等） */}
+                                {isSuffixLottery && (
+                                  <button
+                                    onClick={() => {
+                                      setSuffixModalData({code: result.code, issue: result.issue, lotteryCode: result.lottery_code})
+                                      setSuffixModalOpen(true)
+                                    }}
+                                    className="px-3 py-1.5 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white text-xs font-medium rounded-md shadow-soft transition-colors duration-200 inline-flex items-center gap-1"
                                   >
                                     <span>查看详情</span>
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -738,6 +764,17 @@ export default function Home() {
           onClose={() => setMax3dModalOpen(false)}
           code={max3dModalData.code}
           issue={max3dModalData.issue}
+        />
+      )}
+      
+      {/* 带后缀彩票详情模态框（老挝VIP、ZCVIP等） */}
+      {suffixModalOpen && suffixModalData && (
+        <SuffixLotteryDetailsModal 
+          isOpen={suffixModalOpen}
+          onClose={() => setSuffixModalOpen(false)}
+          code={suffixModalData.code}
+          issue={suffixModalData.issue}
+          lotteryCode={suffixModalData.lotteryCode}
         />
       )}
     </div>

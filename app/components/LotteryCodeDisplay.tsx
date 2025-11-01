@@ -356,23 +356,23 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
     )
   }
 
-  // 带后缀号码的彩票格式（老挝VIP等）
+  // 带后缀号码的彩票格式（老挝VIP等）- 只显示开奖号码（详情由模态框展示）
   if (complexCode.code && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_last4 || complexCode.code_pre2 || complexCode.code_mid2)) {
-    // 获取完整号码用于提取第2/3位
-    const fullCode = typeof complexCode.code === 'string' ? complexCode.code.replace(/,/g, '') : ''
-    const mid2Digits = fullCode.length >= 3 ? fullCode[1] + fullCode[2] : null // 提取第2和第3位
-    
     return (
-      <div className="space-y-3">
-        {/* 主要开奖号码 */}
+      <div className="space-y-2 p-3 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-lg">
+        <div className="text-xs font-bold text-teal-700 dark:text-teal-400 mb-2 text-center">
+          🇱🇦 老挝VIP
+        </div>
+        
+        {/* 只显示开奖号码 */}
         {typeof complexCode.code === 'string' && (
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium mb-2">开奖号码</p>
-            <div className="flex gap-2">
+            <p className="text-xs text-teal-600 dark:text-teal-400 font-medium mb-2 text-center">开奖号码</p>
+            <div className="flex gap-2 justify-center">
               {complexCode.code.replace(/,/g, '').split('').map((num: string, idx: number) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 text-white font-bold text-lg shadow-md"
                 >
                   {num}
                 </span>
@@ -381,186 +381,60 @@ export default function LotteryCodeDisplay({ code, lotteryCode }: Props) {
           </div>
         )}
         
-        {/* 后四位 */}
-        {complexCode.code_last4 && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后四位</p>
-            <div className="flex gap-2">
-              {complexCode.code_last4.split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* 后三位 */}
-        {complexCode.code_last3 && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后三位</p>
-            <div className="flex gap-2">
-              {complexCode.code_last3.split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* 后二位 */}
-        {complexCode.code_last2 && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后二位</p>
-            <div className="flex gap-2">
-              {complexCode.code_last2.split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* 第2/3位 - 优先使用code_mid2，如果没有则从主号码提取 */}
-        {(complexCode.code_mid2 || mid2Digits) && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">第2/3位</p>
-            <div className="flex gap-2">
-              {(complexCode.code_mid2 || mid2Digits || '').split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* 前2位 */}
-        {complexCode.code_pre2 && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">前2位</p>
-            <div className="flex gap-2">
-              {complexCode.code_pre2.split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="text-xs text-center text-teal-600 dark:text-teal-400 mt-2">
+          点击"查看详情"查看完整开奖信息
+        </div>
       </div>
     )
   }
 
-  // ZCVIP 特殊格式
+  // ZCVIP 特殊格式 - 只显示主号和副号（详情由模态框展示）
   if (complexCode.code2 && (complexCode.code_last2 || complexCode.code_last3 || complexCode.code_last4)) {
     return (
-      <div className="space-y-3">
-        <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-2">
+      <div className="space-y-2 p-3 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-lg">
+        <div className="text-xs font-bold text-indigo-700 dark:text-indigo-400 mb-2 text-center">
           💎 ZCVIP
         </div>
         
-        {/* 主号 */}
-        {complexCode.code && typeof complexCode.code === 'string' && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">主号</p>
-            <div className="flex gap-2">
-              {complexCode.code.replace(/,/g, '').split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 text-indigo-700 dark:text-indigo-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
+        <div className="space-y-2">
+          {/* 主号 */}
+          {complexCode.code && typeof complexCode.code === 'string' && (
+            <div>
+              <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium mb-1 text-center">主号</p>
+              <div className="flex gap-2 justify-center">
+                {complexCode.code.replace(/,/g, '').split('').map((num: string, idx: number) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-base shadow-md"
+                  >
+                    {num}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          
+          {/* 副号 */}
+          {complexCode.code2 && typeof complexCode.code2 === 'string' && (
+            <div>
+              <p className="text-xs text-purple-600 dark:text-purple-400 font-medium mb-1 text-center">副号</p>
+              <div className="flex gap-2 justify-center">
+                {complexCode.code2.replace(/,/g, '').split('').map((num: string, idx: number) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-base shadow-md"
+                  >
+                    {num}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
         
-        {/* 副号 */}
-        {complexCode.code2 && typeof complexCode.code2 === 'string' && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">副号</p>
-            <div className="flex gap-2">
-              {complexCode.code2.replace(/,/g, '').split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 text-purple-700 dark:text-purple-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* 后四位 */}
-        {complexCode.code_last4 && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后四位</p>
-            <div className="flex gap-2">
-              {complexCode.code_last4.split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* 后三位 */}
-        {complexCode.code_last3 && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后三位</p>
-            <div className="flex gap-2">
-              {complexCode.code_last3.split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* 后二位 */}
-        {complexCode.code_last2 && (
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">后二位</p>
-            <div className="flex gap-2">
-              {complexCode.code_last2.split('').map((num: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-primary dark:text-blue-300 font-bold text-lg shadow-sm"
-                >
-                  {num}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="text-xs text-center text-indigo-600 dark:text-indigo-400 mt-2">
+          点击"查看详情"查看完整开奖信息
+        </div>
       </div>
     )
   }
